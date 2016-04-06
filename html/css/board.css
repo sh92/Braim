@@ -1,0 +1,42 @@
+body{
+  width: 100%;
+  height: 100%;
+  font-family: "Open Sans", sans-serif;
+
+}
+
+#board_wrapper{
+  width:70%;
+}
+
+#keyword_input{
+
+}
+
+#keyword_input input{
+
+}
+
+#keyword_input button{
+
+}
+
+#suggest_keywords_wrapper{
+
+}
+
+#idea_keyword_wrapper{
+
+}
+
+#chat_wrapper{
+  width:30%;
+}
+
+#chat_list{
+
+}
+
+#chat_input{
+
+}
