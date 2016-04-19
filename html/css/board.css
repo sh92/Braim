@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 #board {
   font-family: monospace;
   background-color: #46b7cd;
@@ -45,7 +45,8 @@
   padding: 10px;
   min-height: 70px;
   outline: none;
-=======
+}
+
 body{
   width: 100%;
   height: 100%;
@@ -53,20 +54,49 @@ body{
 
 }
 
+#wrapper{
+  width:1400px;
+}
+
 #board_wrapper{
-  width:70%;
+  height:100vh;
+  width:1000px;
+  float:left;
+  background-color:#485c6e;
+  z-index: -1;
+}
+
+#board{
+
 }
 
 #keyword_input{
-
+  top:70%;
+  margin-left:auto;
+  margin-right:auto;
+  position:relative;
+  display:block;
+  width:400px;
+  height: auto;
+  vertical-align: middle;
 }
 
 #keyword_input input{
-
+  border: solid 2px #3580a4;
+  height:20px;
+  float:left;
+  width:auto;
+  display:inline-block;
 }
 
-#keyword_input button{
-
+#keyword_button{
+  width:20%;
+  height:26px;
+  border: none;
+  background:#3580a4;
+  display:inline-block;
+  text-align: center;
+  color:white;
 }
 
 #suggest_keywords_wrapper{
@@ -77,15 +107,139 @@ body{
 
 }
 
+.ideabox{
+  border-radius: 4px;
+  background:white;
+  width:100%;
+  max-width:140px;
+  height:auto;
+  text-align: center;
+
+}
+.ideabox h1{
+  font-size:14px;
+}
+.ideabox #marker{
+  background: #35d182;
+  border-radius:50%;
+  width:12px;
+  height:12px;
+  display:inline-block;
+  float:left;
+  margin-left: 10px;
+  margin-top: 4px;
+  margin-right: 4px;
+}
+
+#overlay{
+  background: rgba(0,0,0,0.6);
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 1;
+  position: fixed;
+}
+
+#card_dial{
+  position:fixed;
+  width:300px;
+  background-color: white;
+  height:auto;
+  padding:10px 10px 10px 10px;
+  text-align: center;
+  border-radius: 10px;
+  opacity: 1;
+}
+
+#card_dial input{
+  width:280px;
+  height:20px;
+  border-radius: 4px;
+  border: 2px solid #c4c4c4;
+
+}
+
+#card_dial #c1, #c2, #c3, #c4, #c5{
+  border-radius: 50%;
+  width:20px;
+  height:20px;
+  margin-left:4px;
+  margin-right:4px;
+  display:inline-block;
+}
+
+#card_dial #c1{
+  background: #d12823;
+}
+
+#card_dial #c2{
+  background: #d18623;
+}
+
+#card_dial #c3{
+  background: #65d123;
+}
+
+#card_dial #c4{
+  background: #2378d1;
+}
+
+#card_dial #c5{
+  background: #d123b5;
+}
+
+#card_dial #c_wrapper{
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:4px;
+  padding-bottom:4px;
+  margin-top:10px;
+}
+
+#card_dial #submit_key{
+  margin-top:10px;
+  margin-left:auto;
+  margin-right:auto;
+  width:100px;
+  height:30px;
+  background: #1573c9;
+  color:white;
+}
+
 #chat_wrapper{
-  width:30%;
+  width:400px;
+  padding:10px;
 }
 
 #chat_list{
 
 }
 
+#chat_list .user_name{
+
+}
+
+
+#chat_list .user_icon{
+
+}
+
+#chat_list ul{
+
+}
+
+#chat_list ul li{
+
+}
+
 #chat_input{
 
->>>>>>> origin/master
+}
+
+#chat_intput input{
+
+}
+
+#chat_input button{
+
 }
