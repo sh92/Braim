@@ -39,9 +39,11 @@ function ideacard(p,v,c){
    ******************************************************************/
   function get_key_id(){
     if (key_id !=0){
-      return key_id++;
+      key_id++;
+      return key_id;
     }
     else {
+      key_id=1;
       return key_id;
     }
   }

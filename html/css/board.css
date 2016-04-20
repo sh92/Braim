@@ -65,7 +65,7 @@ body{
   max-width:140px;
   height:auto;
   text-align: center;
-  position: absolute;
+  position: relative;;
   display: block;
 }
 .ideacard h1{
