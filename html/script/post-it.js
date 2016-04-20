@@ -122,7 +122,7 @@ $(document).ready(function () {
    * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
    **************************************************************/
   $('#board_wrapper').on('click', function(e){
-    $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input></input><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div x="'+e.pageX+'" y="'+e.pageY+'" id="submit_key">submit</div></div><div id="overlay"></div>');
+    $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input></input><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
     fun_in_dial();
   });
 
