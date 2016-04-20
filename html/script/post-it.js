@@ -57,10 +57,14 @@ function remove_dial(){
  * 클릭 이벤트를 지정시켜준다.
  ******************************************************************/
 function fun_in_dial(){
-  $('#anchor').find('#submit_key').click(function(){
+  $('#anchor').find('#submit_key').click(function(e){
+    var obj = $('#anchor').find('#card_dial').offset();
     key_content = $('#card_dial input').val();
     //인풋의 내용을 key_content에 저장한다.
-    create_card(null,key_content,tmp_color);
+    x=obj.left+100;
+    y=obj.top+50;
+    //좌표의 중간 위치를 계산
+    create_card(null,key_content,tmp_color,x,y);
     remove_dial();
   });
 
@@ -90,13 +94,14 @@ function fun_in_dial(){
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
  * 이후에는 카드의 위치를 자동으로 배열해준다.
  ******************************************************************/
-function create_card(parent,content,color){
+function create_card(parent,content,color,x,y){
   ideacards.push(new ideacard(null,content,color));
   var thisCard = ideacards[ideacards.length-1];
   var ib = 'ib'+thisCard.keyId;
   $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+thisCard.keyValue+'</h1></div>');
   $('#board_wrapper').find('#'+ib+' .marker').css('background',thisCard.keyColor);
-  //place_card(ib);
+
+  place_card(ib,x,y);
 }
 
 
@@ -104,12 +109,12 @@ function create_card(parent,content,color){
  * 해당카드를 빈 공간을 찾아 자동을 배치해주는 함수.
  * 아직 미구현.
  ******************************************************************/
-function place_card(card){
+function place_card(card,x,y){
   $('.ideacard').click(function(){
     $(this).toggleClass('selected');
   });
-
-
+  $('#board_wrapper').find('#'+card+'').css('left',x);
+  $('#board_wrapper').find('#'+card+'').css('top',y);
 }
 
 $(document).ready(function () {
@@ -117,7 +122,7 @@ $(document).ready(function () {
    * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
    **************************************************************/
   $('#board_wrapper').on('click', function(e){
-    $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input></input><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
+    $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input></input><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div x="'+e.pageX+'" y="'+e.pageY+'" id="submit_key">submit</div></div><div id="overlay"></div>');
     fun_in_dial();
   });
 
