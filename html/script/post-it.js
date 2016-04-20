@@ -38,14 +38,7 @@ function ideacard(p,v,c){
    * 현재는 데모의 구현을 위해 임시로 전역변수의 값을 변동시킴.
    ******************************************************************/
   function get_key_id(){
-    if (key_id !=0){
-      key_id++;
-      return key_id;
-    }
-    else {
-      key_id=1;
-      return key_id;
-    }
+    return (++key_id)-1;
   }
 }
 
@@ -90,7 +83,6 @@ function fun_in_dial(){
   $('#anchor').find('#c5').click(function(){
     tmp_color = '#d123b5';
   });
-
 }
 
 /******************************************************************
@@ -113,6 +105,10 @@ function create_card(parent,content,color){
  * 아직 미구현.
  ******************************************************************/
 function place_card(card){
+  $('.ideacard').click(function(){
+    $(this).toggleClass('selected');
+  });
+
 
 }
 
