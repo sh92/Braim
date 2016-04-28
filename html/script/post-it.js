@@ -9,6 +9,9 @@ var ideacards = []; //키워드(문장)의 내용이 저장될 변수.
 var key_id = 0;
 var tmp_color;
 
+socket.on('msg', function () {
+  
+});
 
 /******************************************************************
  * keyword의 클래스.
@@ -56,17 +59,25 @@ function remove_dial(){
  * 기본 구성은 #anchor안에서 submit_key오브젝트와 overlay오브젝트를 찾아서
  * 클릭 이벤트를 지정시켜준다.
  ******************************************************************/
-function fun_in_dial(){
-  $('#anchor').find('#submit_key').click(function(e){
+function fun_in_dial() {
+  $('#anchor').find('#submit_key').click(function (e) {
     var obj = $('#anchor').find('#card_dial').offset();
     key_content = $('#card_dial input').val();
     //인풋의 내용을 key_content에 저장한다.
-    x=obj.left+100;
-    y=obj.top+50;
+    x = obj.left + 100;
+    y = obj.top + 50;
     //좌표의 중간 위치를 계산
-    create_card(null,key_content,tmp_color,x,y);
-    remove_dial();
+    socket.emit('request create card', null, key_content, tmp_color,x,y);
   });
+}
+/******************************************************************
+ * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
+ * ideacards배열에 새 오브젝트를 생성하여 추가한다.
+ * 이후에는 카드의 위치를 자동으로 배열해준다.
+ ******************************************************************/
+function create_card(content,ib,color,x,y){
+
+  remove_dial();
 
   $('#anchor').find('#overlay').click(function(){
     remove_dial();
@@ -87,17 +98,7 @@ function fun_in_dial(){
   $('#anchor').find('#c5').click(function(){
     tmp_color = '#d123b5';
   });
-}
 
-/******************************************************************
- * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
- * ideacards배열에 새 오브젝트를 생성하여 추가한다.
- * 이후에는 카드의 위치를 자동으로 배열해준다.
- ******************************************************************/
-function create_card(parent,content,color,x,y){
-  ideacards.push(new ideacard(null,content,color));
-  var thisCard = ideacards[ideacards.length-1];
-  var ib = 'ib'+thisCard.keyId;
   $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+thisCard.keyValue+'</h1></div>');
   $('#board_wrapper').find('#'+ib+' .marker').css('background',thisCard.keyColor);
 
@@ -124,6 +125,10 @@ $(document).ready(function () {
   $('#board_wrapper').on('click', function(e){
     $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input></input><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
     fun_in_dial();
+  });
+  
+  socket.on('card created',function(content,ib,color,x,y){
+    create_card(content, ib, color, x, y);
   });
 
 });

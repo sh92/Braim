@@ -166,6 +166,7 @@ body{
 #chat_wrapper{
   width:400px;
   padding:10px;
+  float:right;
 }
 
 #chat_list{
@@ -186,17 +187,23 @@ body{
 }
 
 #chat_list ul li{
+  height:20px;
+}
 
+#chat_list ul li:odd{
+  height:20px;
 }
 
 #chat_input{
 
 }
 
-#chat_intput input{
-
+#chat_intput input#chat_msg{
+  width:340px;
 }
 
-#chat_input button{
-
+#chat_input button#send_msg{
+  width:60px;
+  background:#2a6496;
+  color:white;
 }

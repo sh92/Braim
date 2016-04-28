@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>여기에 타이틀</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/board.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
-    <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script src="script/post-it.js"></script>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>여기에 타이틀</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/board.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+  <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
+  <script src="script/script.js"></script>
+  <script src="script/post-it.js"></script>
+  <script src="script/chat.js"></script>
 
-  </head>
-  <body>
-    <nav>여기에 네비게이션바</nav>
-    <div id="wrapper">
-      <div id="anchor"></div>
-      <div id="board_wrapper">
-        <div id="board"></div>
-        <div id="suggest_keywords_wrapper">
-        </div>
-        <div id="idea_keyeword_wrapper">
-        </div>
-      </div>
-
-      <div id="chat_wrapper">
-        <div id="chat_list">
-        </div>
-        <div id="chat_input">
-          <input type="text"></input>
-          <button></button>
-        </div>
-      </div>
+</head>
+<body>
+<nav>여기에 네비게이션바</nav>
+<div id="wrapper">
+  <div id="anchor"></div>
+  <div id="board_wrapper">
+    <div id="board"></div>
+    <div id="suggest_keywords_wrapper">
     </div>
-  </body>
+    <div id="idea_keyeword_wrapper">
+    </div>
+  </div>
+
+  <div id="chat_wrapper">
+    <div id="chat_list">
+    </div>
+    <div id="chat_input">
+      <input id = chat_msg type="text"/>
+      <button id="send_msg">send</button>
+    </div>
+  </div>
+</div>
+</body>
 </html>
