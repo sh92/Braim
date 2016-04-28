@@ -1,9 +1,10 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+//var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var routes = require('./routes/index');
@@ -56,7 +57,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 /******************************************************************
  * 프로그램 메인 코드
@@ -118,6 +118,7 @@ io.on('connection', function(socket){
   //접속이 되었을 때 환영 메시지를보냄.
   
   socket.on('send msg', function(msg){
+    console.log(msg);
     io.emit('receive msg', msg);
   });
   //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.

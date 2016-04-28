@@ -5,45 +5,7 @@
  * 다이얼로그가 생성되도록 해놓음. 추후 css조작을 통해서 이를 해결 예정.
  ******************************************************************/
 
-var ideacards = []; //키워드(문장)의 내용이 저장될 변수.
-var key_id = 0;
 var tmp_color;
-
-socket.on('msg', function () {
-  
-});
-
-/******************************************************************
- * keyword의 클래스.
- * 부모 오브젝트, 값, 칼라, id, 깊이값을 속성으로 갖는다.
- ******************************************************************/
-function ideacard(p,v,c){
-  this.parentKey = p;
-  this.keyValue = v;
-  this.keyColor = c;
-  this.keyId = get_key_id();
-  this.diff = get_key_diff();
-  /****************************************************************
-   * keyword의 깊이를 구해주는 메소드.
-   * 재귀적으로 부모 오브젝트를 따라 올라가면서 갯수를 체크함.
-   ****************************************************************/
-  function get_key_diff(){
-    if (this.parentKey == null){
-      return 1;
-    }
-    else {
-      return 1 + get_key_diff(this.parentKey);
-    }
-  }
-  /******************************************************************
-   * keyword의 id를 지정해주는 메소드.
-   * 실질적으로는 데이터베이스와의 연동을 통해서 값을 받아와야함.
-   * 현재는 데모의 구현을 위해 임시로 전역변수의 값을 변동시킴.
-   ******************************************************************/
-  function get_key_id(){
-    return (++key_id)-1;
-  }
-}
 
 /******************************************************************
  * 다이얼로그 삭제 기능. 페이드아웃후 해당 오브젝트를 제거하도록 작동함.
@@ -62,7 +24,7 @@ function remove_dial(){
 function fun_in_dial() {
   $('#anchor').find('#submit_key').click(function (e) {
     var obj = $('#anchor').find('#card_dial').offset();
-    key_content = $('#card_dial input').val();
+    var key_content = $('#card_dial input').val();
     //인풋의 내용을 key_content에 저장한다.
     x = obj.left + 100;
     y = obj.top + 50;
@@ -123,7 +85,7 @@ $(document).ready(function () {
    * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
    **************************************************************/
   $('#board_wrapper').on('click', function(e){
-    $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input></input><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
+    $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input/><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
     fun_in_dial();
   });
   

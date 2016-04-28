@@ -188,21 +188,24 @@ body{
 
 #chat_list ul li{
   height:20px;
+  word-break:break-all;
 }
 
-#chat_list ul li:odd{
+#chat_list ul li:nth-child(odd){
   height:20px;
+  background: #a6e1ec;
+  word-break:break-all;
 }
 
 #chat_input{
 
 }
 
-#chat_intput input#chat_msg{
+#chat_msg{
   width:340px;
 }
 
-#chat_input button#send_msg{
+#send_msg{
   width:60px;
   background:#2a6496;
   color:white;
