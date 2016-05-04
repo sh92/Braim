@@ -17,7 +17,7 @@ var boardController = require('./controllers/boardController');
 
 
 
-var port = process.env.PORT || 3003;
+var port = process.env.PORT || 3333;
 app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
@@ -37,6 +37,6 @@ io.on('connection', function(socket){
 });
 
 http.listen(port, function(){
-    console.log('listening on *:3003');
+    console.log('listening on *:3333');
 });
 
