@@ -17,7 +17,7 @@ var boardController = require('./controllers/boardController');
 
 
 
-var port = process.env.PORT || 3001;
+var port = process.env.PORT || 3003;
 app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
