@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Passport Local Mongoose Login Example</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container"><a href="/" class="brand">Home</a>
+          <ul class="nav">
+            <li><a href="/register">Register</a></li>
+            <li><a href="/login">Log In</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Log In</h2>
+      <form action="/login" method="post">
+        <div>
+          <label>Username</label>
+          <input type="text" name="username">
+        </div>
+        <div>
+          <label>Password</label>
+          <input type="password" name="password">
+        </div>
+        <div>
+          <input type="submit" value="Log In">
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
