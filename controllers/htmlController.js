@@ -3,15 +3,11 @@ var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 module.exports = function(app) {
-	
-	app.get('/', function(req, res) {
-		res.render('index');
-	});
-	
+
 	app.get('/person/:user_id', function(req, res) {
 		res.render('person', { ID: req.params.id, Qstr: req.query.qstr });
 	});
-	
+
 	app.post('/person', urlencodedParser, function(req, res) {
 		res.send('Thank you!');
 		console.log(req.body.username);
@@ -33,5 +29,5 @@ module.exports = function(app) {
 		res.send('Thank you for Json!');
 		console.log(req.body.content);
 	});
-	
+
 }
