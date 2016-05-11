@@ -7,6 +7,17 @@
 
 var socket = io();
 
+var maxib=0;
+
+
+function isMaxIb(ib) {
+
+    if (ib > maxib) {
+        maxib = ib;
+        return true;
+    }
+    return false;
+}
 
 /******************************************************************
  * 다이얼로그 삭제 기능. 페이드아웃후 해당 오브젝트를 제거하도록 작동함.
@@ -32,7 +43,8 @@ function fun_in_dial(color) {
         x = obj.left + 100;
         y = obj.top + 50;
         //좌표의 중간 위치를 계산
-        socket.emit('request create card', null, key_content, color,x,y);
+        console.log("#"+maxib);
+        socket.emit('request create card', null, key_content,maxib,color,x,y);
     });
 
     /******************************************************************
@@ -69,7 +81,6 @@ function fun_in_dial(color) {
 function create_card(content,ib,color,x,y){
 
     remove_dial();
-
     $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1></div>');
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
     place_card(ib,x,y);
@@ -95,13 +106,13 @@ $(document).ready(function () {
     $('#board_wrapper').on('click', function(e){
 
         $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input/><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
-
         fun_in_dial();
     });
 
-
     socket.on('card created',function(content,ib,color,x,y){
-        create_card(content, ib, color, x, y);
+        console.log(maxib);
+        if(isMaxIb(ib)) {
+            create_card(content, ib, color, x, y);
+        }
     });
-
 });

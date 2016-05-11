@@ -37,7 +37,7 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 
-var port = process.env.PORT || 3333;
+var port = process.env.PORT || 3001;
 app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
@@ -45,12 +45,13 @@ app.set('view engine', 'ejs');
 htmlController(app);
 setupController(app);
 userController(app);
-boardController(app);
 accountController(app);
 
 http = require("http").createServer(app);
 var io = require('socket.io').listen(http);
-addCardController(io);
+boardController(app,io);
+addCardController(app,io);
+
 
 
 io.on('connection', function(socket){
@@ -58,7 +59,7 @@ io.on('connection', function(socket){
 });
 
 http.listen(port, function(){
-    console.log('listening on *:3333');
+    console.log('listening on *:3001');
 });
 
 process.on('uncaughtException', function (err) {

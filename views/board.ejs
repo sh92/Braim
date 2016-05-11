@@ -7,9 +7,17 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
     <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script>
+        function loadDB() {
+            $.ajax({
+                type: "POST",
+                url: "/load"
+            });
+        }
+    </script>
     <script src="assets/js/post-it.js"></script>
 </head>
-<body>
+<body onload="loadDB()">
 <nav>여기에 네비게이션바</nav>
 <div id="wrapper">
     <div id="anchor"></div>
