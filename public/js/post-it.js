@@ -9,9 +9,10 @@ var socket = io();
 
 var maxib=0;
 
+
 function isMaxIb(ib) {
 
-    if (ib >= maxib) {
+    if (ib > maxib) {
         maxib = ib;
         return true;
     }
@@ -42,10 +43,8 @@ function fun_in_dial(color) {
         x = obj.left + 100;
         y = obj.top + 50;
         //좌표의 중간 위치를 계산
-        maxib++;
-        console.log("@"+maxib);
-
-        socket.emit('request create card', null, key_content, maxib ,color,x,y);
+        console.log("#"+maxib);
+        socket.emit('request create card', null, key_content,maxib,color,x,y);
     });
 
     /******************************************************************
@@ -107,18 +106,13 @@ $(document).ready(function () {
     $('#board_wrapper').on('click', function(e){
 
         $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input/><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
-
         fun_in_dial();
     });
 
-
     socket.on('card created',function(content,ib,color,x,y){
-        console.log(ib);
         console.log(maxib);
-        if(isMaxIb(ib)){
-            console.log(maxib);
+        if(isMaxIb(ib)) {
             create_card(content, ib, color, x, y);
         }
     });
-
 });

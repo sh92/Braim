@@ -3,7 +3,7 @@
  */
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-module.exports = function(io) {
+module.exports = function(app,io) {
 
 
     /******************************************************************
@@ -46,7 +46,11 @@ module.exports = function(io) {
     }
 
 
+    /******************************************************************
+     * Database에 Ajax를 통해 비동기적으로 데이터를 저장해주는 소스
+     ******************************************************************/
     function save_db(content,ib,color,x,y) {
+
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/board');
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -58,6 +62,7 @@ module.exports = function(io) {
             y: y
         }));
     }
+
     /******************************************************************
      * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -86,6 +91,7 @@ module.exports = function(io) {
         //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
         socket.on('request create card',function(parent,content,ib,color,x,y){
+            ib++;
             create_card(parent, content,ib,color,x,y);
         });
 

@@ -50,7 +50,7 @@ accountController(app);
 http = require("http").createServer(app);
 var io = require('socket.io').listen(http);
 boardController(app,io);
-addCardController(io);
+addCardController(app,io);
 
 
 

@@ -15,18 +15,3 @@ var personSchema = new Schema({
 var Person = mongoose.model('Person', personSchema);
 
 module.exports=Person;
-
-//
-// app.use('/', function (req, res, next) {
-//     console.log('Request Url:' + req.url);
-//
-//     // get all the users
-//     Person.find({}, function(err, users) {
-//         if (err) throw err;
-//
-//         // object of all the users
-//         console.log(users);
-//     });
-//
-//     next();
-// });

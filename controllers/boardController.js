@@ -28,10 +28,7 @@ module.exports = function(app,io) {
         });
 
     });
-    //replaceAll prototype 선언
-    String.prototype.replaceAll = function(org, dest) {
-        return this.split(org).join(dest);
-    }
+
     app.post('/load', function(req, res) {
         Board.find({}, function(err, board) {
             if (err) throw err;
