@@ -21,6 +21,7 @@
     "passport": "*",
     "passport-local": "*",
     "passport-local-mongoose": "*",
-    "express-session": "*"
+    "express-session": "*",
+    "xmlhttprequest": "*"
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Created by withGod on 5/3/16.
  */
-
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = function(io) {
 
@@ -45,6 +45,22 @@ module.exports = function(io) {
         }
     }
 
+
+    function save_db(content,ib,color,x,y) {
+        console.log("success")
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3333/api/board');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            content: content,
+            ib: ib,
+            color: color,
+            x: x,
+            y: y
+        }));
+        console.log("success2")
+
+    }
     /******************************************************************
      * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -53,6 +69,7 @@ module.exports = function(io) {
     function create_card(parent,content,color,x,y){
         ideacards.push(new ideacard(null,content,color));
         var ib = 'ib'+ideacards[ideacards.length-1].keyId;
+        save_db(content,ib,color,x,y);
         io.emit('card created', ideacards[ideacards.length-1].keyValue,ib,color,x,y);
     }
 

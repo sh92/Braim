@@ -61,21 +61,6 @@ function fun_in_dial(color) {
 }
 
 
-function save_db(content,ib,color,x,y) {
-    $.ajax({
-        type: "POST",
-        url: "/api/board",
-        data: JSON.stringify({
-            content : content,
-            ib: ib,
-            color: color,
-            x : x,
-            y : y
-        }),
-        dataType: 'json',
-        contentType: "application/json"
-    });
-}
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -87,7 +72,6 @@ function create_card(content,ib,color,x,y){
 
     $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1></div>');
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
-    save_db(content,ib,color,x,y);
     place_card(ib,x,y);
 }
 
