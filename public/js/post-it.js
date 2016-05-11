@@ -7,7 +7,7 @@
 
 var socket = io();
 
-var maxib=1;
+var maxib=0;
 
 function isMaxIb(ib) {
 

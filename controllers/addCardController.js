@@ -48,7 +48,7 @@ module.exports = function(io) {
 
     function save_db(content,ib,color,x,y) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3333/api/board');
+        xhr.open('POST', 'http://localhost:3001/api/board');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
             content: content,
