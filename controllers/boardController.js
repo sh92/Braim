@@ -9,6 +9,7 @@ module.exports = function(app,io) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
+    //내용 검색을 하는 소스
     app.get('/api/board/:content', function(req, res) {
 
         Board.find({ content: req.params.content }, function(err, board) {
@@ -19,16 +20,10 @@ module.exports = function(app,io) {
 
     });
 
-    app.get('/api/board/:id', function(req, res) {
 
-        Board.findById({ _id: req.params.id }, function(err, board) {
-            if (err) throw err;
-
-            res.send(board);
-        });
-
-    });
-
+    /**
+     * 내용을 전부 가져오는 소스
+     */
     app.post('/load', function(req, res) {
         Board.find({}, function(err, board) {
             if (err) throw err;
@@ -39,7 +34,10 @@ module.exports = function(app,io) {
             }
         });
     });
-    
+
+    /**
+     * Ajax로 json형태로 값을 받는데, 동일한 id에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
+     */
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
 
@@ -68,6 +66,9 @@ module.exports = function(app,io) {
 
     });
 
+    /**
+     * 삭제할 때사용
+     */
     app.delete('/api/board', function(req, res) {
 
         Board.findByIdAndRemove(req.body.ib, function(err) {

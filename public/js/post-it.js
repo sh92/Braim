@@ -7,9 +7,10 @@
 
 var socket = io();
 
+/******************************************************************
+ * 아이디어를 차례대로 중복없이 가져오기 위해 사용
+ ******************************************************************/
 var maxib=0;
-
-
 function isMaxIb(ib) {
 
     if (ib > maxib) {
@@ -43,7 +44,8 @@ function fun_in_dial(color) {
         x = obj.left + 100;
         y = obj.top + 50;
         //좌표의 중간 위치를 계산
-        console.log("#"+maxib);
+
+        //socket으로 card를 생성할 것을 요청
         socket.emit('request create card', null, key_content,maxib,color,x,y);
     });
 
@@ -110,7 +112,7 @@ $(document).ready(function () {
     });
 
     socket.on('card created',function(content,ib,color,x,y){
-        console.log(maxib);
+        // 이미 만들어진 카드는 만들지 않기 위해 isMaxIb를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
         if(isMaxIb(ib)) {
             create_card(content, ib, color, x, y);
         }
