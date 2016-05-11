@@ -14,8 +14,6 @@ mongoose.connect('mongodb://localhost/passport_local_mongoose');
 //controller 선언
 var htmlController = require('./controllers/htmlController');
 var addCardController = require('./controllers/addCardController');
-var setupController = require('./controllers/setupController');
-var userController = require('./controllers/userController');
 var boardController = require('./controllers/boardController');
 var accountController = require('./controllers/accountController');
 
@@ -44,8 +42,6 @@ app.set('view engine', 'ejs');
 
 //controller 사용
 htmlController(app);
-setupController(app);
-userController(app);
 accountController(app);
 
 http = require("http").createServer(app);
