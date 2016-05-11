@@ -8,6 +8,12 @@
     <script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="assets/js/post-it.js"></script>
+    <script>
+        $.ajax({
+            type: "POST",
+            url: "/load"
+        });
+    </script>
 </head>
 <body>
 <nav>여기에 네비게이션바</nav>

@@ -4,7 +4,7 @@
 var Board = require('../model/board_model');
 var bodyParser = require('body-parser');
 
-module.exports = function(app) {
+module.exports = function(app,io) {
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,6 +28,21 @@ module.exports = function(app) {
         });
 
     });
+    //replaceAll prototype 선언
+    String.prototype.replaceAll = function(org, dest) {
+        return this.split(org).join(dest);
+    }
+    app.post('/load', function(req, res) {
+        Board.find({}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                io.emit('card created', idea.content,idea.ib,idea.color,idea.x,idea.y);
+            }
+        });
+    });
+    
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
 

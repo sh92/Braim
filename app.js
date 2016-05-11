@@ -45,12 +45,13 @@ app.set('view engine', 'ejs');
 htmlController(app);
 setupController(app);
 userController(app);
-boardController(app);
 accountController(app);
 
 http = require("http").createServer(app);
 var io = require('socket.io').listen(http);
+boardController(app,io);
 addCardController(io);
+
 
 
 io.on('connection', function(socket){

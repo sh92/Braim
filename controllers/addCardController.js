@@ -47,7 +47,6 @@ module.exports = function(io) {
 
 
     function save_db(content,ib,color,x,y) {
-        console.log("success")
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3333/api/board');
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -58,19 +57,17 @@ module.exports = function(io) {
             x: x,
             y: y
         }));
-        console.log("success2")
-
     }
     /******************************************************************
      * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
      * 이후에는 만들어진 카드의 값들을 다시 클라이언트로 넘겨준다.
      ******************************************************************/
-    function create_card(parent,content,color,x,y){
+    function create_card(parent,content,ib,color,x,y){
         ideacards.push(new ideacard(null,content,color));
-        var ib = 'ib'+ideacards[ideacards.length-1].keyId;
+        //var ib = 'ib'+ideacards[ideacards.length-1].keyId;
         save_db(content,ib,color,x,y);
-        io.emit('card created', ideacards[ideacards.length-1].keyValue,ib,color,x,y);
+        io.emit('card created', content,ib,color,x,y);
     }
 
 
@@ -88,9 +85,10 @@ module.exports = function(io) {
         });
         //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
-        socket.on('request create card',function(parent,content,color,x,y){
-            create_card(parent, content,color,x,y);
+        socket.on('request create card',function(parent,content,ib,color,x,y){
+            create_card(parent, content,ib,color,x,y);
         });
+
     });
 
 }

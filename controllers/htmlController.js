@@ -25,9 +25,5 @@ module.exports = function(app) {
 		res.render('board');
 	});
 
-	app.post('/boardjson', jsonParser, function(req, res) {
-		res.send('Thank you for Json!');
-		console.log(req.body.content);
-	});
 
 }
