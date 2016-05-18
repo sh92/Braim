@@ -57,6 +57,9 @@ body{
 #idea_keyword_wrapper{
 
 }
+.cntIb{
+    display: inline-block;padding-left: 1px;font-size:5px
+}
 .good{
     width: 20px;height: 20px; display: inline-block;
 }
