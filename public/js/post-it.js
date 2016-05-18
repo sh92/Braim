@@ -81,6 +81,12 @@ function reply(e,ib) {
     e.stopPropagation();
 }
 
+function popupOpen(e,ib){
+    var popUrl = "popup?ib="+ib+"";	//팝업창에 출력될 페이지 URL
+    var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
+    window.open(popUrl,"",popOption);
+    e.stopPropagation();
+}
 
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
@@ -90,12 +96,20 @@ function reply(e,ib) {
 function create_card(content,ib,color,x,y,cnt){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea"><input class="inline_block" type="button" value="의견보기" onclick="popupOpen(event,'+ib+')"/><input class="inline_block" type="button" value="의견입력" onclick="reply(event,'+ib+')"/><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3></div></div>');
+    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'">' +
+        '<div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea">' +
+        '<input class="inline_block" type="button" value="의견보기" onclick="popupOpen(event,'+ib+')"/>' +
+        '<input class="inline_block" type="button" value="의견입력" onclick="reply(event,'+ib+')"/>' +
+        '<img class="good" src="assets/img/good.png" id="good'+ib+'"/>' +
+        '<h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3>' +
+        '</div></div>');
+
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
+    place_card(ib,x,y);
     $('#'+ib+'').find('#good'+ib+'').click(function(){
         socket.emit('request update cnt', null, content,ib,color,x,y,cnt);
+        event.stopPropagation();
     });
-    place_card(ib,x,y,cnt);
 }
 
 
@@ -113,12 +127,7 @@ function place_card(card,x,y){
     $('#board_wrapper').find('#'+card+'').css('top',y);
 }
 
-function popupOpen(e,ib){
-    var popUrl = "popup?ib="+ib+"";	//팝업창에 출력될 페이지 URL
-    var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
-    window.open(popUrl,"",popOption);
-    e.stopPropagation();
-}
+
 $(document).ready(function () {
     /**************************************************************
      * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
