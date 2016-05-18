@@ -77,7 +77,9 @@ function fun_in_dial(cnt) {
 
 function reply(e,ib) {
     var content = prompt("의견:","");
-    socket.emit('reply',ib,content);
+    if(content !== undefined && content !=null) {
+        socket.emit('reply', ib, content);
+    }
     e.stopPropagation();
 }
 

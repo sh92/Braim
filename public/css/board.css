@@ -7,6 +7,7 @@ body{
 
 #wrapper{
     width:1300px;
+    height: 100%;
 }
 
 #board_wrapper{
@@ -105,11 +106,11 @@ body{
     height: 100%;
     z-index: 1;
     opacity: 1;
-    position: fixed;
+    position: absolute;
 }
 
 #card_dial{
-    position:fixed;
+    position:absolute;
     width:300px;
     background-color: white;
     height:auto;

@@ -14,7 +14,6 @@ Graph.prototype = {
         }
         return this.nodes[ib];
     },
-
     addEdge: function(from, to) {
         var f = this.addNode(from);
         var t = this.addNode(to);
