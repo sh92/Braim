@@ -75,6 +75,11 @@ function fun_in_dial(cnt) {
     });
 }
 
+function reply(ib) {
+    var content = prompt("의견:","");
+    socket.emit('reply',ib,content);
+}
+
 
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
@@ -84,7 +89,7 @@ function fun_in_dial(cnt) {
 function create_card(content,ib,color,x,y,cnt){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><div><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" style="display: inline-block;padding-left: 1px;font-size:5px">'+cnt+'</h3></div><h1>'+content+'</h1></div>');
+    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea"><input class="inline_block" type="button" value="의견입력" onclick="reply('+ib+')"/><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3></div></div>');
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
     $('#'+ib+'').find('#good'+ib+'').click(function(){
         socket.emit('request update cnt', null, content,ib,color,x,y,cnt);
@@ -125,7 +130,7 @@ $(document).ready(function () {
         // 이미 만들어진 카드는 만들지 않기 위해 isMaxIb를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
         if(isMaxIb(ib)) {
             create_card(content, ib, color, x, y,cnt);
-            $(this).text(cnt);
+            $('#'+ib+'').find('#cnt'+ib+'').text(cnt);
         }
 
     });

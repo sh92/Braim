@@ -23,6 +23,17 @@ module.exports = function(app,io) {
         }));
     }
 
+    function save_reply(ib,reply){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3001/api/reply');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            ib: ib,
+            reply: reply
+        }));
+    }
+
     /******************************************************************
      * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -59,6 +70,10 @@ module.exports = function(app,io) {
             cnt++;
             save_db(content,ib,color,x,y,cnt);
             io.emit('update cnt', content,ib,color,x,y,cnt);
+        });
+
+        socket.on('reply',function(ib,reply){
+            save_reply(ib,reply);
         });
 
     });

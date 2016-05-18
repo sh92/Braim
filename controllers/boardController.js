@@ -2,6 +2,7 @@
  * Created by withGod on 5/4/16.
  */
 var Board = require('../model/board_model');
+var Reply = require('../model/reply_model');
 var bodyParser = require('body-parser');
 
 module.exports = function(app,io) {
@@ -40,13 +41,9 @@ module.exports = function(app,io) {
      */
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
-        var idea='none';
         var query={ib:req.body.ib};
 
-
         if (req.body.cnt>0) {
-            console.log("update");
-            var options = {new: true};
             var update ={content: req.body.content, ib:req.body.ib , color:req.body.color, x:req.body.x,y:req.body.y,cnt : req.body.cnt};
             Board.findOneAndUpdate(query,update, function(err, board) {
                 if (err) throw err;
@@ -54,7 +51,6 @@ module.exports = function(app,io) {
             });
         } else {
 
-            console.log("!!!");
             var newBoard = Board({
                 content: req.body.content,
                 ib: req.body.ib,
@@ -71,6 +67,23 @@ module.exports = function(app,io) {
         }
         res.render('board', {  Content: req.body.content });
 
+    });
+
+
+    /**
+     * Ajax로 json형태로 reply를 받음
+     */
+    var jsonParser =bodyParser.json();
+    app.post('/api/reply', jsonParser,function(req, res) {
+        var newReply = Reply({
+            ib: req.body.ib,
+            reply: req.body.reply
+        });
+        newReply.save(function(err) {
+            if (err) throw err;
+            //res.send('Success');
+        });
+        res.render('board', {  Content: req.body.reply });
     });
 
     /**
