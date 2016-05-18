@@ -5,10 +5,11 @@
 	</head>
 
 	<body>
-		<h1>안녕하세요<% if(User!=null){%><%= ' '+User.username+'님' %><%}%>. 브레임에 오신 것을 환영합니다.</h1>
+		<h1>안녕하세요<% if(User!=null){%><%= ' '+User+'님' %><%}%>. 브레임에 오신 것을 환영합니다.</h1>
 		<a href='/login'>Login</a></br />
 		<a href='/register'>Register</a><br />
 		<a href='/logout'>Logout</a><br />
+		<a href='/board'>Board</a><br />
 		<!--<script>
 			$.ajax({
 				type: "POST",
