@@ -99,6 +99,30 @@ module.exports = function(app,io) {
     });
 
     /**
+     * Ajax로 json형태로 edge 받음
+     */
+    var jsonParser =bodyParser.json();
+    app.post('/api/edge', jsonParser,function(req, res) {
+        var query={ib:req.body.ib};
+        Board.find(query, function(err, board) {
+            for (var i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge:req.body.edge}
+                Board.findOneAndUpdate(query,update, function(err, board2) {
+                    if (err) throw err;
+                    //res.send('Success');
+                });
+                io.emit("Apply Edge Success", update);
+            }
+
+
+        });
+
+    });
+
+
+    /**
      * 내용을 응답에 대해서 전부 가져오는 소스
      */
     app.get('/popup', function(req, res) {

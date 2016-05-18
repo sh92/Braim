@@ -27,7 +27,8 @@
     <script src="assets/js/post-it.js"></script>
 </head>
 <body onload="loadDB()">
-<nav><span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.</nav>
+<nav><span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.
+    <input type=button value="그래프 Edge 적용" onclick="applyEdge()"/></nav>
 <div id="wrapper">
     <div id="anchor"></div>
     <div id="board_wrapper">

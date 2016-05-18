@@ -173,6 +173,9 @@ function place_card(idea){
     });
 }
 
+function applyEdge() {
+    socket.emit("request EdgeAdd",from,to);
+}
 
 $(document).ready(function () {
     /**************************************************************
@@ -194,6 +197,10 @@ $(document).ready(function () {
 
     socket.on('update cnt',function(idea){
         $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
+    });
+
+    socket.on('Apply Edge Success',function(idea){
+        alert("ib:"+idea.ib+", edge:"+idea.edge);
     });
 
     socket.on('card created',function(idea){

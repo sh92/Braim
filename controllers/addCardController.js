@@ -36,6 +36,18 @@ module.exports = function(app,io) {
         }));
     }
 
+    function save_Edge(ib, edge) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:3001/api/edge');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            ib: ib,
+            edge: edge
+        }));
+    }
+
+
     /******************************************************************
      * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -84,5 +96,8 @@ module.exports = function(app,io) {
             save_reply(ib, reply);
         });
 
+        socket.on('request EdgeAdd', function (ib,edge) {
+            save_Edge(ib, edge);
+        });
     });
 }
