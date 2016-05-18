@@ -11,13 +11,12 @@ var LocalStrategy = require('passport-local').Strategy
 mongoose.connect('mongodb://localhost/passport_local_mongoose');
 //mongoose.connect(config.getDbConnectionString())
 
-
+//controller 선언
 var htmlController = require('./controllers/htmlController');
 var addCardController = require('./controllers/addCardController');
-var setupController = require('./controllers/setupController');
-var userController = require('./controllers/userController');
 var boardController = require('./controllers/boardController');
 var accountController = require('./controllers/accountController');
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -41,16 +40,14 @@ var port = process.env.PORT || 3001;
 app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
-
+//controller 사용
 htmlController(app);
-setupController(app);
-userController(app);
 accountController(app);
 
 http = require("http").createServer(app);
 var io = require('socket.io').listen(http);
 boardController(app,io);
-addCardController(io);
+addCardController(app,io);
 
 
 
