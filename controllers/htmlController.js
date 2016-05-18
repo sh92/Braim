@@ -12,22 +12,5 @@ module.exports = function(app) {
 		res.render('board', { User : req.user});
 	});
 
-	/* 현재 사용하지 않는 코드로 나중에 필요할 때 문법을 가져와서 사용 (추후 삭제 예정)
-	 app.get('/person/:user_id', function(req, res) {
-	 res.render('person', { ID: req.params.id, Qstr: req.query.qstr });
-	 });
-
-	 app.post('/person', urlencodedParser, function(req, res) {
-	 res.send('Thank you!');
-	 console.log(req.body.username);
-	 console.log(req.body.password);
-	 });
-
-	 var jsonParser =bodyParser.json();
-	 app.post('/personjson', jsonParser, function(req, res) {
-	 res.send('Thank you for Json!');
-	 console.log(req.body.username);
-	 console.log(req.body.password);
-	 });*/
 
 }

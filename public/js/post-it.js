@@ -75,9 +75,10 @@ function fun_in_dial(cnt) {
     });
 }
 
-function reply(ib) {
+function reply(e,ib) {
     var content = prompt("의견:","");
     socket.emit('reply',ib,content);
+    e.stopPropagation();
 }
 
 
@@ -89,7 +90,7 @@ function reply(ib) {
 function create_card(content,ib,color,x,y,cnt){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea"><input class="inline_block" type="button" value="의견보기" onclick="popupOpen('+ib+')"/><input class="inline_block" type="button" value="의견입력" onclick="reply('+ib+')"/><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3></div></div>');
+    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea"><input class="inline_block" type="button" value="의견보기" onclick="popupOpen(event,'+ib+')"/><input class="inline_block" type="button" value="의견입력" onclick="reply(event,'+ib+')"/><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3></div></div>');
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
     $('#'+ib+'').find('#good'+ib+'').click(function(){
         socket.emit('request update cnt', null, content,ib,color,x,y,cnt);
@@ -112,10 +113,11 @@ function place_card(card,x,y){
     $('#board_wrapper').find('#'+card+'').css('top',y);
 }
 
-function popupOpen(ib){
+function popupOpen(e,ib){
     var popUrl = "popup?ib="+ib+"";	//팝업창에 출력될 페이지 URL
     var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
     window.open(popUrl,"",popOption);
+    e.stopPropagation();
 }
 $(document).ready(function () {
     /**************************************************************
@@ -124,6 +126,7 @@ $(document).ready(function () {
     $('#board_wrapper').on('click', function(e){
 
         $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input/><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
+
         fun_in_dial();
     });
 
