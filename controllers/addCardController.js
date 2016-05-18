@@ -20,7 +20,8 @@ module.exports = function(app,io) {
             color: idea.color,
             x: idea.x,
             y: idea.y,
-            cnt: idea.cnt
+            cnt: idea.cnt,
+            edge: idea.edge
         }));
     }
 
@@ -59,20 +60,21 @@ module.exports = function(app,io) {
         });
         //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
-        socket.on('request create card', function (content,ib,color,x,y,cnt) {
+        socket.on('request create card', function (content,ib,color,x,y,cnt,edge) {
             var idea = Board({
                 content: content,
                 ib: ib,
                 color: color,
                 x: x,
                 y: y,
-                cnt: cnt
+                cnt: cnt,
+                edge: edge
             });
             idea.ib++;
             create_card(idea);
         });
 
-        socket.on('request update cnt', function (parent, idea) {
+        socket.on('request update cnt', function (idea) {
             idea.cnt++;
             save_db(idea);
             io.emit('update cnt', idea);

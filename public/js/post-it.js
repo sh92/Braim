@@ -41,12 +41,13 @@ function fun_in_dial() {
         var content = $('#card_dial input').val();
 
         //인풋의 내용을 key_content에 저장한다.
-        x = obj.left + 100;
-        y = obj.top + 50;
+        x = obj.left;
+        y = obj.top;
         //좌표의 중간 위치를 계산
         var cnt=0;
+        var edge = [];
         //socket으로 card를 생성할 것을 요청
-        socket.emit('request create card',content,maxib,color,x,y,cnt);
+        socket.emit('request create card',content,maxib,color,x,y,cnt,edge);
     });
 
     /******************************************************************
@@ -89,6 +90,10 @@ function popupOpen(e,ib){
     e.stopPropagation();
 }
 
+function cardClick(e) {
+    alert("아이디어가 겹칩니다");
+    e.stopPropagation();
+}
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -97,18 +102,25 @@ function popupOpen(e,ib){
 function create_card(idea){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+idea.ib+'">' +
-        '<div class="marker"></div><h1>'+idea.content+'</h1><div class="bottom_idea">' +
-        '<input class="inline_block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
-        '<input class="inline_block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
-        '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
-        '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
-        '</div></div>');
+    $('#board_wrapper').append('<div class="boundary" onclick="cardClick(event)" id="'+idea.ib+'"><div class="ideacard">' +
+                '<div class="marker"></div>' +
+                '<h1>'+idea.content+'</h1>' +
+                '<div class="bottom_idea">' +
+                    '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
+                    '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
+                    '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
+                    '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
+                '</div>' +
+            '</div>' +
+        '</div>');
 
     $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
     place_card(idea);
+    $('.ideacard').click(function(){
+        $(this).toggleClass('selected');
+    });
     $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
-        socket.emit('request update cnt', null, idea);
+        socket.emit('request update cnt', idea);
         event.stopPropagation();
     });
 }
@@ -119,11 +131,6 @@ function create_card(idea){
  * 아직 미구현.
  ******************************************************************/
 function place_card(idea){
-    $('.ideacard').click(function(){
-        $(this).toggleClass('selected');
-    });
-
-
     $('#board_wrapper').find('#'+idea.ib+'').css('left',idea.x);
     $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
 }
@@ -135,7 +142,14 @@ $(document).ready(function () {
      **************************************************************/
     $('#board_wrapper').on('click', function(e){
 
-        $('#anchor').append('<div id="card_dial" style="top:'+e.pageY+'px; left:'+e.pageX+'px;"><input/><div id="c_wrapper"><div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div></div><div id="submit_key">submit</div></div><div id="overlay"></div>');
+        $('#anchor').append('<div id="card_dial" style="top:'+(e.pageY-100)+'px; left:'+(e.pageX-160)+'px;">' +
+                '<input/>'+
+                '<div id="c_wrapper">' +
+                    '<div id ="c1"></div><div id ="c2"></div><div id ="c3"></div><div id ="c4"></div><div id ="c5"></div>' +
+                '</div>' +
+                '<div id="submit_key">submit</div>' +
+            '</div>' +
+            '<div id="overlay"></div>');
 
         fun_in_dial();
     });

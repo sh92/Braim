@@ -21,7 +21,6 @@ module.exports = function(app,io) {
 
     });
 
-
     /**
      * 내용을 전부 가져오는 소스
      */
@@ -58,7 +57,7 @@ module.exports = function(app,io) {
         var query={ib:req.body.ib};
 
         if (req.body.cnt>0) {
-            var update ={content: req.body.content, ib:req.body.ib , color:req.body.color, x:req.body.x,y:req.body.y,cnt : req.body.cnt};
+            var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge}
             Board.findOneAndUpdate(query,update, function(err, board) {
                 if (err) throw err;
                 //res.send('Success');
@@ -71,7 +70,8 @@ module.exports = function(app,io) {
                 color: req.body.color,
                 x: req.body.x,
                 y: req.body.y,
-                cnt: req.body.cnt
+                cnt: req.body.cnt,
+                edge: req.body.edge
             });
             newBoard.save(function(err) {
                 if (err) throw err;
