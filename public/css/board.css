@@ -57,6 +57,9 @@ body{
 #idea_keyword_wrapper{
 
 }
+.good{
+    width: 20px;height: 20px; display: inline-block;
+}
 
 .ideacard{
     border-radius: 4px;
