@@ -8,7 +8,7 @@ module.exports = function(app,io) {
     /******************************************************************
      * Database에 Ajax를 통해 비동기적으로 데이터를 저장해주는 소스
      ******************************************************************/
-    function save_db(content,ib,color,x,y) {
+    function save_db(content,ib,color,x,y,cnt) {
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/board');
@@ -18,7 +18,8 @@ module.exports = function(app,io) {
             ib: ib,
             color: color,
             x: x,
-            y: y
+            y: y,
+            cnt: cnt
         }));
     }
 
@@ -27,11 +28,11 @@ module.exports = function(app,io) {
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
      * 이후에는 만들어진 카드의 값들을 다시 클라이언트로 넘겨준다.
      ******************************************************************/
-    function create_card(parent,content,ib,color,x,y){
-        ideacards.push(new ideacard(null,content,color));
+    function create_card(parent,content,ib,color,x,y,cnt){
+        ideacards.push(new ideacard(null,content,color,cnt));
         //var ib = 'ib'+ideacards[ideacards.length-1].keyId;
-        save_db(content,ib,color,x,y);
-        io.emit('card created', content,ib,color,x,y);
+        save_db(content,ib,color,x,y,cnt);
+        io.emit('card created', content,ib,color,x,y,cnt);
     }
 
 
@@ -49,9 +50,15 @@ module.exports = function(app,io) {
         });
         //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
-        socket.on('request create card',function(parent,content,ib,color,x,y){
+        socket.on('request create card',function(parent,content,ib,color,x,y,cnt){
             ib++;
-            create_card(parent, content,ib,color,x,y);
+            create_card(parent, content,ib,color,x,y,cnt);
+        });
+
+        socket.on('request update cnt',function(parent,content,ib,color,x,y,cnt){
+            cnt++;
+            save_db(content,ib,color,x,y,cnt);
+            io.emit('update cnt', content,ib,color,x,y,cnt);
         });
 
     });

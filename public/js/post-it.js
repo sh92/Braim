@@ -4,7 +4,6 @@
  * ver 0.1 : 대화상자의 중복 생성을 막기 위해서 setclick이 true일 때만
  * 다이얼로그가 생성되도록 해놓음. 추후 css조작을 통해서 이를 해결 예정.
  ******************************************************************/
-
 var socket = io();
 
 /******************************************************************
@@ -31,9 +30,10 @@ function remove_dial(){
 /******************************************************************
  * dialouge내부의 버튼들을 활성화하기 위한 함수.
  * 기본 구성은 #anchor안에서 submit_key오브젝트와 overlay오브젝트를 찾아서
- * 클릭 이벤트를 지정시켜준다.
+ * 클릭 이벤트를 지정시켜 준다.
  ******************************************************************/
-function fun_in_dial(color) {
+
+function fun_in_dial(cnt) {
     var color;
 
     $('#anchor').find('#submit_key').click(function (e) {
@@ -44,9 +44,10 @@ function fun_in_dial(color) {
         x = obj.left + 100;
         y = obj.top + 50;
         //좌표의 중간 위치를 계산
+        var cnt=0
 
         //socket으로 card를 생성할 것을 요청
-        socket.emit('request create card', null, key_content,maxib,color,x,y);
+        socket.emit('request create card', null, key_content,maxib,color,x,y,cnt);
     });
 
     /******************************************************************
@@ -80,12 +81,15 @@ function fun_in_dial(color) {
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
  * 이후에는 카드의 위치를 자동으로 배열해준다.
  ******************************************************************/
-function create_card(content,ib,color,x,y){
+function create_card(content,ib,color,x,y,cnt){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1></div>');
+    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><div><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" style="display: inline-block;padding-left: 1px;font-size:5px">'+cnt+'</h3></div><h1>'+content+'</h1></div>');
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
-    place_card(ib,x,y);
+    $('#'+ib+'').find('#good'+ib+'').click(function(){
+        socket.emit('request update cnt', null, content,ib,color,x,y,cnt);
+    });
+    place_card(ib,x,y,cnt);
 }
 
 
@@ -97,6 +101,8 @@ function place_card(card,x,y){
     $('.ideacard').click(function(){
         $(this).toggleClass('selected');
     });
+
+
     $('#board_wrapper').find('#'+card+'').css('left',x);
     $('#board_wrapper').find('#'+card+'').css('top',y);
 }
@@ -111,10 +117,16 @@ $(document).ready(function () {
         fun_in_dial();
     });
 
-    socket.on('card created',function(content,ib,color,x,y){
+    socket.on('update cnt',function(content,ib,color,x,y,cnt){
+        $('#'+ib+'').find('#cnt'+ib+'').text(cnt);
+    });
+
+    socket.on('card created',function(content,ib,color,x,y,cnt){
         // 이미 만들어진 카드는 만들지 않기 위해 isMaxIb를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
         if(isMaxIb(ib)) {
-            create_card(content, ib, color, x, y);
+            create_card(content, ib, color, x, y,cnt);
+            $(this).text(cnt);
         }
+
     });
 });
