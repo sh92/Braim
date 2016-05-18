@@ -10,6 +10,8 @@ var socket = io();
  * 아이디어를 차례대로 중복없이 가져오기 위해 사용
  ******************************************************************/
 var maxib=0;
+var from=0;
+var to=[];
 function isMaxIb(ib) {
 
     if (ib > maxib) {
@@ -41,8 +43,8 @@ function fun_in_dial() {
         var content = $('#card_dial input').val();
 
         //인풋의 내용을 key_content에 저장한다.
-        x = obj.left;
-        y = obj.top;
+        x = obj.left+80;
+        y = obj.top+50;
         //좌표의 중간 위치를 계산
         var cnt=0;
         var edge = [];
@@ -90,10 +92,21 @@ function popupOpen(e,ib){
     e.stopPropagation();
 }
 
-function cardClick(e) {
-    alert("아이디어가 겹칩니다");
+function createCard(e) {
+    alert("아이디어 카드가 겹칩니다. 다른 곳을 지정해 주세요");
+
     e.stopPropagation();
 }
+function contains(array, obj) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -102,7 +115,9 @@ function cardClick(e) {
 function create_card(idea){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="boundary" onclick="cardClick(event)" id="'+idea.ib+'"><div class="ideacard">' +
+
+    //$('#board_wrapper').append('<div class="boundary" onclick="createCard(event)" id="'+idea.ib+'"><div class="ideacard">' +
+    $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
                 '<div class="marker"></div>' +
                 '<h1>'+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
@@ -111,14 +126,11 @@ function create_card(idea){
                     '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
                     '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
                 '</div>' +
-            '</div>' +
-        '</div>');
+            '</div>');
 
     $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
     place_card(idea);
-    $('.ideacard').click(function(){
-        $(this).toggleClass('selected');
-    });
+
     $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
         socket.emit('request update cnt', idea);
         event.stopPropagation();
@@ -133,6 +145,32 @@ function create_card(idea){
 function place_card(idea){
     $('#board_wrapper').find('#'+idea.ib+'').css('left',idea.x);
     $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
+    $('#board_wrapper').find('#'+idea.ib+'').click(function(){
+        if(from==0) {
+            $(this).toggleClass('selected');
+            from = this.id;
+            alert("set from : "+this.id);
+            event.stopPropagation();
+        }else{
+
+            if(from==this.id){
+                $(this).toggleClass('selected');
+                alert("reset from : "+this.id);
+                from=0;
+                to = [];
+            }else{
+                if(contains(to,this.id)){
+                    alert(this.id+" 연결 해제");
+                    to.splice($.inArray(this.id, to),1);
+                }else{
+                    to.push(this.id);
+                    alert("to: "+to);
+                }
+            }
+            event.stopPropagation();
+            return;
+        }
+    });
 }
 
 
@@ -165,5 +203,6 @@ $(document).ready(function () {
             $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
         }
     });
+
 
 });

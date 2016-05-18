@@ -23,7 +23,7 @@ body{
 }
 
 .boundary{
-    padding: 50px 80px;
+    padding: 60px 80px;
     height: auto;
     position: absolute;
 }
@@ -85,6 +85,7 @@ body{
     text-align: center;
     display: block;
     padding:5px;
+    position: absolute;;
 }
 .ideacard h1{
     font-size:14px;
