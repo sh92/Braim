@@ -5,8 +5,8 @@ var Account = require('../model/account_model')
 module.exports = function(app) {
     app.get('/', function(req, res) {
         // console.log(req.user); //for checking login function
-		res.render('index');
-	});
+        res.render('index', { User : req.user});
+    });
 
     app.get('/register', function(req, res) {
         res.render('register', {});
