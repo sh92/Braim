@@ -89,7 +89,7 @@ function reply(ib) {
 function create_card(content,ib,color,x,y,cnt){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea"><input class="inline_block" type="button" value="의견입력" onclick="reply('+ib+')"/><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3></div></div>');
+    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'"><div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea"><input class="inline_block" type="button" value="의견보기" onclick="popupOpen('+ib+')"/><input class="inline_block" type="button" value="의견입력" onclick="reply('+ib+')"/><img class="good" src="assets/img/good.png" id="good'+ib+'"/><h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3></div></div>');
     $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
     $('#'+ib+'').find('#good'+ib+'').click(function(){
         socket.emit('request update cnt', null, content,ib,color,x,y,cnt);
@@ -112,6 +112,11 @@ function place_card(card,x,y){
     $('#board_wrapper').find('#'+card+'').css('top',y);
 }
 
+function popupOpen(ib){
+    var popUrl = "popup?ib="+ib+"";	//팝업창에 출력될 페이지 URL
+    var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
+    window.open(popUrl,"",popOption);
+}
 $(document).ready(function () {
     /**************************************************************
      * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
@@ -132,6 +137,6 @@ $(document).ready(function () {
             create_card(content, ib, color, x, y,cnt);
             $('#'+ib+'').find('#cnt'+ib+'').text(cnt);
         }
-
     });
+
 });

@@ -65,7 +65,6 @@ module.exports = function(app,io) {
             });
 
         }
-        res.render('board', {  Content: req.body.content });
 
     });
 
@@ -83,7 +82,18 @@ module.exports = function(app,io) {
             if (err) throw err;
             //res.send('Success');
         });
-        res.render('board', {  Content: req.body.reply });
+    });
+
+    /**
+     * 내용을 응답에 대해서 전부 가져오는 소스
+     */
+    app.get('/popup', function(req, res) {
+        Reply.find({ib:req.query.ib}, function(err, board) {
+            if (err) throw err;
+            console.log(req.params.ib);
+            console.log(board);
+            res.render('popup', { board:board});
+        });
     });
 
     /**
