@@ -9,7 +9,7 @@ module.exports = function(app) {
 
 	
 	app.get('/board', function(req, res) {
-		res.render('board');
+		res.render('board', { User : req.user});
 	});
 
 	/* 현재 사용하지 않는 코드로 나중에 필요할 때 문법을 가져와서 사용 (추후 삭제 예정)

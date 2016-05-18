@@ -1,6 +1,15 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<% if (User == null) { %>
+    <title>로그인을 먼저 하세요.</title>
+    <body>
+         로그인을 먼저 하세요.<br>
+         <a href='/login'>login</a>
+    </body>
+</head>
+</html>
+<% } else { %>
     <title>여기에 타이틀</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/board.css">
@@ -18,7 +27,7 @@
     <script src="assets/js/post-it.js"></script>
 </head>
 <body onload="loadDB()">
-<nav>여기에 네비게이션바</nav>
+<nav><span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.</nav>
 <div id="wrapper">
     <div id="anchor"></div>
     <div id="board_wrapper">
@@ -39,3 +48,4 @@
 </div>
 </body>
 </html>
+<% } %>
