@@ -33,21 +33,20 @@ function remove_dial(){
  * 클릭 이벤트를 지정시켜 준다.
  ******************************************************************/
 
-function fun_in_dial(cnt) {
+function fun_in_dial() {
     var color;
 
     $('#anchor').find('#submit_key').click(function (e) {
         var obj = $('#anchor').find('#card_dial').offset();
-        var key_content = $('#card_dial input').val();
+        var content = $('#card_dial input').val();
 
         //인풋의 내용을 key_content에 저장한다.
         x = obj.left + 100;
         y = obj.top + 50;
         //좌표의 중간 위치를 계산
-        var cnt=0
-
+        var cnt=0;
         //socket으로 card를 생성할 것을 요청
-        socket.emit('request create card', null, key_content,maxib,color,x,y,cnt);
+        socket.emit('request create card',content,maxib,color,x,y,cnt);
     });
 
     /******************************************************************
@@ -95,21 +94,21 @@ function popupOpen(e,ib){
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
  * 이후에는 카드의 위치를 자동으로 배열해준다.
  ******************************************************************/
-function create_card(content,ib,color,x,y,cnt){
+function create_card(idea){
 
     remove_dial();
-    $('#board_wrapper').append('<div class="ideacard" id="'+ib+'">' +
-        '<div class="marker"></div><h1>'+content+'</h1><div class="bottom_idea">' +
-        '<input class="inline_block" type="button" value="의견보기" onclick="popupOpen(event,'+ib+')"/>' +
-        '<input class="inline_block" type="button" value="의견입력" onclick="reply(event,'+ib+')"/>' +
-        '<img class="good" src="assets/img/good.png" id="good'+ib+'"/>' +
-        '<h3 id="cnt'+ib+'" class="cntIb" >'+cnt+'</h3>' +
+    $('#board_wrapper').append('<div class="ideacard" id="'+idea.ib+'">' +
+        '<div class="marker"></div><h1>'+idea.content+'</h1><div class="bottom_idea">' +
+        '<input class="inline_block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
+        '<input class="inline_block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
+        '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
+        '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
         '</div></div>');
 
-    $('#board_wrapper').find('#'+ib+' .marker').css('background',color);
-    place_card(ib,x,y);
-    $('#'+ib+'').find('#good'+ib+'').click(function(){
-        socket.emit('request update cnt', null, content,ib,color,x,y,cnt);
+    $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
+    place_card(idea);
+    $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
+        socket.emit('request update cnt', null, idea);
         event.stopPropagation();
     });
 }
@@ -119,14 +118,14 @@ function create_card(content,ib,color,x,y,cnt){
  * 해당카드를 빈 공간을 찾아 자동을 배치해주는 함수.
  * 아직 미구현.
  ******************************************************************/
-function place_card(card,x,y){
+function place_card(idea){
     $('.ideacard').click(function(){
         $(this).toggleClass('selected');
     });
 
 
-    $('#board_wrapper').find('#'+card+'').css('left',x);
-    $('#board_wrapper').find('#'+card+'').css('top',y);
+    $('#board_wrapper').find('#'+idea.ib+'').css('left',idea.x);
+    $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
 }
 
 
@@ -141,15 +140,15 @@ $(document).ready(function () {
         fun_in_dial();
     });
 
-    socket.on('update cnt',function(content,ib,color,x,y,cnt){
-        $('#'+ib+'').find('#cnt'+ib+'').text(cnt);
+    socket.on('update cnt',function(idea){
+        $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
     });
 
-    socket.on('card created',function(content,ib,color,x,y,cnt){
+    socket.on('card created',function(idea){
         // 이미 만들어진 카드는 만들지 않기 위해 isMaxIb를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
-        if(isMaxIb(ib)) {
-            create_card(content, ib, color, x, y,cnt);
-            $('#'+ib+'').find('#cnt'+ib+'').text(cnt);
+        if(isMaxIb(idea.ib)) {
+            create_card(idea);
+            $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
         }
     });
 

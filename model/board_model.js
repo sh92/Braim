@@ -12,7 +12,8 @@ var boardSchema = new Schema({
     color : String,
     x : String,
     y : String,
-    cnt : String
+    cnt : String,
+    edge : [String]
 });
 
 var Board = mongoose.model('Board', boardSchema);

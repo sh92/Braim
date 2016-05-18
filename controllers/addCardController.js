@@ -2,24 +2,25 @@
  * Created by withGod on 5/3/16.
  */
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var Board = require('../model/board_model');
 
 module.exports = function(app,io) {
 
     /******************************************************************
      * Database에 Ajax를 통해 비동기적으로 데이터를 저장해주는 소스
      ******************************************************************/
-    function save_db(content, ib, color, x, y, cnt) {
+    function save_db(idea) {
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/board');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
-            content: content,
-            ib: ib,
-            color: color,
-            x: x,
-            y: y,
-            cnt: cnt
+            content: idea.content,
+            ib: idea.ib,
+            color: idea.color,
+            x: idea.x,
+            y: idea.y,
+            cnt: idea.cnt
         }));
     }
 
@@ -39,11 +40,9 @@ module.exports = function(app,io) {
      * ideacards배열에 새 오브젝트를 생성하여 추가한다.
      * 이후에는 만들어진 카드의 값들을 다시 클라이언트로 넘겨준다.
      ******************************************************************/
-    function create_card(parent, content, ib, color, x, y, cnt) {
-        ideacards.push(new ideacard(null, content, color, cnt));
-        //var ib = 'ib'+ideacards[ideacards.length-1].keyId;
-        save_db(content, ib, color, x, y, cnt);
-        io.emit('card created', content, ib, color, x, y, cnt);
+    function create_card(idea) {
+        save_db(idea);
+        io.emit('card created', idea);
     }
 
 
@@ -60,15 +59,23 @@ module.exports = function(app,io) {
         });
         //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
-        socket.on('request create card', function (parent, content, ib, color, x, y, cnt) {
-            ib++;
-            create_card(parent, content, ib, color, x, y, cnt);
+        socket.on('request create card', function (content,ib,color,x,y,cnt) {
+            var idea = Board({
+                content: content,
+                ib: ib,
+                color: color,
+                x: x,
+                y: y,
+                cnt: cnt
+            });
+            idea.ib++;
+            create_card(idea);
         });
 
-        socket.on('request update cnt', function (parent, content, ib, color, x, y, cnt) {
-            cnt++;
-            save_db(content, ib, color, x, y, cnt);
-            io.emit('update cnt', content, ib, color, x, y, cnt);
+        socket.on('request update cnt', function (parent, idea) {
+            idea.cnt++;
+            save_db(idea);
+            io.emit('update cnt', idea);
         });
 
         socket.on('reply', function (ib, reply) {

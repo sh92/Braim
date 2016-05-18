@@ -31,7 +31,7 @@ module.exports = function(app,io) {
             for (i = 0; i < board.length; i++) {
                 var obj = JSON.stringify(board[i]);
                 var idea = JSON.parse(obj);
-                io.emit('card created', idea.content,idea.ib,idea.color,idea.x,idea.y,idea.cnt);
+                io.emit('card created', idea);
             }
         });
     });
@@ -45,7 +45,7 @@ module.exports = function(app,io) {
             for (i = 0; i < board.length; i++) {
                 var obj = JSON.stringify(board[i]);
                 var idea = JSON.parse(obj);
-                io.emit('card created', idea.content,idea.ib,idea.color,idea.x,idea.y,idea.cnt);
+                io.emit('card created', idea);
             }
         });
     });
@@ -104,8 +104,6 @@ module.exports = function(app,io) {
     app.get('/popup', function(req, res) {
         Reply.find({ib:req.query.ib}, function(err, board) {
             if (err) throw err;
-            console.log(req.params.ib);
-            console.log(board);
             res.render('popup', { board:board});
         });
     });
