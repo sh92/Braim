@@ -174,7 +174,11 @@ function place_card(idea){
 }
 
 function applyEdge() {
-    socket.emit("request EdgeAdd",from,to);
+    if(from==0){
+        alert('card가 선택되지 않았습니다');
+    }else {
+        socket.emit("request EdgeAdd", from, to);
+    }
 }
 
 $(document).ready(function () {
