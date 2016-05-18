@@ -25,6 +25,20 @@ module.exports = function(app,io) {
     /**
      * 내용을 전부 가져오는 소스
      */
+    app.get('/load', function(req, res) {
+        Board.find({}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                io.emit('card created', idea.content,idea.ib,idea.color,idea.x,idea.y,idea.cnt);
+            }
+        });
+    });
+    
+    /**
+     * 내용을 전부 가져오는 소스
+     */
     app.post('/load', function(req, res) {
         Board.find({}, function(err, board) {
             if (err) throw err;
