@@ -60,7 +60,12 @@ body{
 .good{
     width: 20px;height: 20px; display: inline-block;
 }
-
+.inline_block{
+    display: inline-block;
+}
+.bottom_idea{
+    height: 25px;text-align: right;
+}
 .ideacard{
     border-radius: 4px;
     background:white;
