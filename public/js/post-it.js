@@ -92,7 +92,7 @@ function popupOpen(e,ib){
     e.stopPropagation();
 }
 
-function createCard(e) {
+function boundaryCard(e) {
     alert("아이디어 카드가 겹칩니다. 다른 곳을 지정해 주세요");
 
     e.stopPropagation();
@@ -119,7 +119,7 @@ function create_card(idea){
     //$('#board_wrapper').append('<div class="boundary" onclick="createCard(event)" id="'+idea.ib+'"><div class="ideacard">' +
     $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
                 '<div class="marker"></div>' +
-                '<h1>'+idea.content+'</h1>' +
+                '<h1>'+idea.ib+': '+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
                     '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
                     '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
@@ -147,9 +147,11 @@ function place_card(idea){
     $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
     $('#board_wrapper').find('#'+idea.ib+'').click(function(){
         if(from==0) {
+
             $(this).toggleClass('selected');
             from = this.id;
-            alert("set from : "+this.id);
+            $("#from").text(from);
+            alert("set from : "+from);
             event.stopPropagation();
         }else{
 
@@ -158,13 +160,17 @@ function place_card(idea){
                 alert("reset from : "+this.id);
                 from=0;
                 to = [];
+                $("#from").text("지정 안됨");
+                $("#to").text("지정 안됨");
             }else{
                 if(contains(to,this.id)){
                     alert(this.id+" 연결 해제");
                     to.splice($.inArray(this.id, to),1);
+                    $("#to").text(to);
                 }else{
                     to.push(this.id);
                     alert("to: "+to);
+                    $("#to").text(to);
                 }
             }
             event.stopPropagation();
@@ -180,7 +186,61 @@ function applyEdge() {
         socket.emit("request EdgeAdd", from, to);
     }
 }
+function showEdge(){
+    if(maxib<2){
+        alert('edge가 없습니다');
+    }else{
+        socket.emit("request showEdge");
+    }
+}
 
+function createEdge(idea) {
+    for (var i = 0; i < idea.edge.length; i++) {
+
+
+        var isAlredy = document.getElementById("'" + idea.edge[i] + 'edgeTo' + idea.ib + "'");
+        if (isAlredy !== "undefined") {
+            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).remove();
+        }
+        $('#board_wrapper').append('<canvas  width="1000" height="800" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
+        x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
+        y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top;
+
+        var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.ib)[0];
+
+
+        if (idea.x <= x) {
+            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('left', idea.x);
+            lessX = idea.x;
+        } else {
+            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('left', x);
+            lessX = x;
+        }
+
+        if (idea.y <= y) {
+            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('top', idea.y);
+            lessY = idea.y;
+        } else {
+            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('top', y);
+            lessY = y;
+        }
+
+        $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
+
+        var ctx = canvas.getContext('2d');
+        ctx.strokeStyle = "darkorange";
+        ctx.lineWidth = 12;
+        ctx.lineCap = "bevel";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        ctx.moveTo(idea.x - lessX, idea.y - lessY);
+        toX = Math.abs(idea.x - x);
+        toY = Math.abs(idea.y - y);
+        ctx.lineTo(x - lessX, y - lessY);
+        ctx.stroke();
+        event.stopPropagation();
+    }
+}
 $(document).ready(function () {
     /**************************************************************
      * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
@@ -204,7 +264,8 @@ $(document).ready(function () {
     });
 
     socket.on('Apply Edge Success',function(idea){
-        alert("ib:"+idea.ib+", edge:"+idea.edge);
+        createEdge(idea);
+
     });
 
     socket.on('card created',function(idea){

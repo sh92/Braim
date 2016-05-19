@@ -116,9 +116,24 @@ module.exports = function(app,io) {
                 io.emit("Apply Edge Success", update);
             }
 
-
         });
 
+    });
+
+
+    /**
+     * Ajax로 Edge들을 보여주기 위해 이렇게 사용
+     */
+    var jsonParser =bodyParser.json();
+    app.get('/api/showEdge', jsonParser,function(req, res) {
+        Board.find({}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                io.emit("Apply Edge Success", idea);
+            }
+        });
     });
 
 

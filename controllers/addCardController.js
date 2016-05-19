@@ -47,6 +47,12 @@ module.exports = function(app,io) {
         }));
     }
 
+    function show_Edge() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://localhost:3001/api/showEdge');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send();
+    }
 
     /******************************************************************
      * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
@@ -98,6 +104,9 @@ module.exports = function(app,io) {
 
         socket.on('request EdgeAdd', function (ib,edge) {
             save_Edge(ib, edge);
+        });
+        socket.on('request showEdge', function (ib,edge) {
+            show_Edge();
         });
     });
 }

@@ -85,7 +85,8 @@ body{
     text-align: center;
     display: block;
     padding:5px;
-    position: absolute;;
+    position: absolute;
+    z-index:3;
 }
 .ideacard h1{
     font-size:14px;
@@ -99,7 +100,6 @@ body{
     float:left;
     margin-left: 10px;
     margin-top: 4px;
-    margin-right: 4px;
 }
 
 .selected {
