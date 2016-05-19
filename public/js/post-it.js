@@ -202,35 +202,21 @@ function createEdge(idea) {
         if (isAlredy !== "undefined") {
             $("#" + idea.edge[i] + 'edgeTo' + idea.ib).remove();
         }
+
+
         $('#board_wrapper').append('<canvas  width="1000" height="800" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
-        x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
-        y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top;
-
-        var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.ib)[0];
-
-
-        if (idea.x <= x) {
-            lessX = idea.x;
-        } else {
-            lessX = x;
-        }
-
-        if (idea.y <= y) {
-            lessY = idea.y;
-        } else {
-            lessY = y;
-        }
 
         $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
-
-        var ctx = canvas.getContext('2d');
+        x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
+        y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top
 
         fromX=parseInt(idea.x);
         fromY=parseInt(idea.y)
         toX=parseInt(x);
         toY=parseInt(y);
 
-
+        var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.ib)[0];
+        var ctx = canvas.getContext('2d');
         if(fromX<toX && fromY <toY){ // from이 왼쪽 위에 있을 때
             ArrowLineFunction(fromX+160,fromY-8,toX,toY-40,ctx);
         }else if(fromX<toX && fromY >toY){  // from이 왼쪽 아래 있을 때
@@ -240,10 +226,6 @@ function createEdge(idea) {
         }else{ // from이 오른쪽 아래있거나 그 외
             ArrowLineFunction(fromX,fromY-40,toX+80,toY,ctx);
         }
-
-
-
-
 
         event.stopPropagation();
     }
