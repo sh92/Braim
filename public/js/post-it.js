@@ -210,36 +210,94 @@ function createEdge(idea) {
 
 
         if (idea.x <= x) {
-            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('left', idea.x);
             lessX = idea.x;
         } else {
-            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('left', x);
             lessX = x;
         }
 
         if (idea.y <= y) {
-            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('top', idea.y);
             lessY = idea.y;
         } else {
-            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('top', y);
             lessY = y;
         }
 
         $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
 
         var ctx = canvas.getContext('2d');
-        ctx.strokeStyle = "darkorange";
-        ctx.lineWidth = 12;
-        ctx.lineCap = "bevel";
-        ctx.lineJoin = "round";
-        ctx.beginPath();
-        ctx.moveTo(idea.x - lessX, idea.y - lessY);
-        toX = Math.abs(idea.x - x);
-        toY = Math.abs(idea.y - y);
-        ctx.lineTo(x - lessX, y - lessY);
-        ctx.stroke();
+
+        fromX=parseInt(idea.x);
+        fromY=parseInt(idea.y)
+        toX=parseInt(x);
+        toY=parseInt(y);
+
+
+        if(fromX<toX && fromY <toY){ // from이 왼쪽 위에 있을 때
+            ArrowLineFunction(fromX+160,fromY-8,toX,toY-40,ctx);
+        }else if(fromX<toX && fromY >toY){  // from이 왼쪽 아래 있을 때
+            ArrowLineFunction(fromX+160,fromY-80,toX,toY-40,ctx);
+        }else if(fromX>toX && fromY <toY){ // from이 오른쪽 위에 있을 때
+            ArrowLineFunction(fromX+10,fromY-40,toX+80,toY-80,ctx);
+        }else{ // from이 오른쪽 아래있거나 그 외
+            ArrowLineFunction(fromX,fromY-40,toX+80,toY,ctx);
+        }
+
+
+
+
+
         event.stopPropagation();
     }
+}
+
+
+function ArrowLineFunction(fromX,fromY,toX,toY,context) {
+    function Line(x1,y1,x2,y2){
+        this.x1=x1;
+        this.y1=y1;
+        this.x2=x2;
+        this.y2=y2;
+    }
+    Line.prototype.drawWithArrowheads=function(ctx){
+
+        // arbitrary styling
+        ctx.strokeStyle="yellow";
+        ctx.fillStyle="yellow";
+        ctx.lineWidth=1;
+
+        // draw the line
+        ctx.beginPath();
+        ctx.moveTo(this.x1,this.y1);
+        ctx.lineTo(this.x2,this.y2);
+        ctx.stroke();
+
+        // draw the starting arrowhead
+       /* var startRadians=Math.atan((this.y2-this.y1)/(this.x2-this.x1));
+        startRadians+=((this.x2>this.x1)?-90:90)*Math.PI/180;
+        this.drawArrowhead(ctx,this.x1,this.y1,startRadians);*/
+
+        // draw the ending arrowhead
+        var endRadians=Math.atan((this.y2-this.y1)/(this.x2-this.x1));
+        endRadians+=((this.x2>this.x1)?90:-90)*Math.PI/180;
+        this.drawArrowhead(ctx,this.x2,this.y2,endRadians);
+
+
+    }
+    Line.prototype.drawArrowhead=function(ctx,x,y,radians){
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(x,y);
+        ctx.rotate(radians);
+        ctx.moveTo(0,0);
+        ctx.lineTo(5,20);
+        ctx.lineTo(-5,20);
+        ctx.closePath();
+        ctx.restore();
+        ctx.fill();
+    }
+    // create a new line object
+    var line=new Line(fromX,fromY,toX,toY);
+    // draw the line
+    line.drawWithArrowheads(context);
 }
 $(document).ready(function () {
     /**************************************************************
@@ -265,7 +323,6 @@ $(document).ready(function () {
 
     socket.on('Apply Edge Success',function(idea){
         createEdge(idea);
-
     });
 
     socket.on('card created',function(idea){

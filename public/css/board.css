@@ -11,7 +11,7 @@ body{
 }
 
 #board_wrapper{
-    height:100vh;
+    height:1000px;
     width:1000px;
     float:left;
     background-color:#485c6e;
