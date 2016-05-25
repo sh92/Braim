@@ -57,7 +57,6 @@ module.exports = function(app,io) {
         var query={ib:req.body.ib};
         Board.findOne({ ib: req.body.ib}, function (err, findedboard){
             if (err) throw err;
-            console.log(findedboard);
             if (findedboard!=null) {
                 var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge}
                 Board.findOneAndUpdate(query,update, function(err, board) {
