@@ -26,11 +26,6 @@ body{
     width: 150px;
     height: 35px;
 }
-.boundary{
-    padding: 60px 80px;
-    height: auto;
-    position: absolute;
-}
 
 #keyword_input{
     top:70%;
@@ -233,4 +228,9 @@ body{
     width:60px;
     background:#2a6496;
     color:white;
+}
+
+#endText{
+    left: 100px;
+    position: relative;
 }

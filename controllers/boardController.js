@@ -55,30 +55,33 @@ module.exports = function(app,io) {
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
         var query={ib:req.body.ib};
+        Board.findOne({ ib: req.body.ib}, function (err, findedboard){
+            if (err) throw err;
+            console.log(findedboard);
+            if (findedboard!=null) {
+                var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge}
+                Board.findOneAndUpdate(query,update, function(err, board) {
+                    if (err) throw err;
+                    //res.send('Success');
+                });
+            } else {
 
-        if (req.body.cnt>0) {
-            var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge}
-            Board.findOneAndUpdate(query,update, function(err, board) {
-                if (err) throw err;
-                //res.send('Success');
-            });
-        } else {
+                var newBoard = Board({
+                    content: req.body.content,
+                    ib: req.body.ib,
+                    color: req.body.color,
+                    x: req.body.x,
+                    y: req.body.y,
+                    cnt: req.body.cnt,
+                    edge: req.body.edge
+                });
+                newBoard.save(function(err) {
+                    if (err) throw err;
+                    //res.send('Success');
+                });
 
-            var newBoard = Board({
-                content: req.body.content,
-                ib: req.body.ib,
-                color: req.body.color,
-                x: req.body.x,
-                y: req.body.y,
-                cnt: req.body.cnt,
-                edge: req.body.edge
-            });
-            newBoard.save(function(err) {
-                if (err) throw err;
-                //res.send('Success');
-            });
-
-        }
+            }
+        });
 
     });
 

@@ -99,7 +99,6 @@ module.exports = function(app,io) {
         });
 
         socket.on('request moveXY', function (idea) {
-            
             save_db(idea);
             io.emit('update XY', idea);
         });

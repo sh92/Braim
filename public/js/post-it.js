@@ -110,6 +110,7 @@ function moveXY(card,idea) {
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
+
 }
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
@@ -161,25 +162,25 @@ function place_card(idea){
             $(this).toggleClass('selected');
             from = this.id;
             $("#from").text(from);
-            alert("시작 지점 정함 : "+from);
+            alert("시작 지점 선택 : "+from);
             event.stopPropagation();
         }else{
 
             if(from==this.id){
                 $(this).toggleClass('selected');
-                alert("시작지점 해제 : "+this.id);
+                alert("시작 지점 취소 : "+this.id);
                 from=0;
                 to = [];
                 $("#from").text("지정 안됨");
                 $("#to").text("지정 안됨");
             }else{
                 if(contains(to,this.id)){
-                    alert(this.id+" 연결 해제");
+                    alert("도착 지점 취소 : "+this.id);
                     to.splice($.inArray(this.id, to),1);
                     $("#to").text(to);
                 }else{
                     to.push(this.id);
-                    alert("to: "+to);
+                    alert("도착 지점 선택 : "+to);
                     $("#to").text(to);
                 }
             }
@@ -198,11 +199,13 @@ function applyEdge() {
     }
 }
 function showEdge(){
-    if(maxib<2){
-        alert('edge가 없습니다');
-    }else{
+    if(maxib>1){
         socket.emit("request showEdge");
     }
+}
+
+function removeEdge() {
+    $('#board_wrapper').find(".edgeGroup").remove();
 }
 
 function createEdge(idea) {
@@ -215,7 +218,7 @@ function createEdge(idea) {
         }
 
 
-        $('#board_wrapper').append('<canvas  width="1000" height="800" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
+        $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
 
         $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
         x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
@@ -317,6 +320,7 @@ $(document).ready(function () {
 
     socket.on('update XY',function(idea){
         $('#'+idea.ib+'').css({top: idea.y, left: idea.x});
+        showEdge();
     });
 
     socket.on('Apply Edge Success',function(idea){

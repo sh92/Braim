@@ -31,10 +31,12 @@
 <body onload="loadDB()">
 <nav>
     <span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.
-    <input type=button value="그래프 Edge 적용" onclick="applyEdge()"/>
-    <input type=button value="그래프 Edge 적용 보기" onclick="showEdge()"/>
-    <div class="inline-block">From:<p id="from" class="inline-block"></p>  </div>
-    <div class="inline-block">To:<p id="to" class="inline-block"></p></div>
+    <input type=button value="관계 적용" onclick="applyEdge()"/>
+    <input type=button value="관계 보기" onclick="showEdge()"/>
+    <input type=button value="관계 보지 않기" onclick="removeEdge()"/>
+    <br>
+    <div class="inline-block">선택한 시작 지점 :<p id="from" class="inline-block"></p></div>
+    <div class="inline-block" id="endText">선택한 도착 지점 :<p id="to" class="inline-block"></p></div>
 </nav>
 <div id="wrapper">
     <div id="anchor"></div>
