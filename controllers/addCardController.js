@@ -98,6 +98,12 @@ module.exports = function(app,io) {
             io.emit('update cnt', idea);
         });
 
+        socket.on('request moveXY', function (idea) {
+            
+            save_db(idea);
+            io.emit('update XY', idea);
+        });
+
         socket.on('reply', function (ib, reply) {
             save_reply(ib, reply);
         });

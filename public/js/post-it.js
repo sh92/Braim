@@ -106,7 +106,11 @@ function contains(array, obj) {
     return false;
 }
 
-
+function moveXY(card,idea) {
+    idea.y  = card.style.top;
+    idea.x = card.style.left;
+    socket.emit('request moveXY', idea);
+}
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
@@ -115,10 +119,9 @@ function contains(array, obj) {
 function create_card(idea){
 
     remove_dial();
-
     //$('#board_wrapper').append('<div class="boundary" onclick="createCard(event)" id="'+idea.ib+'"><div class="ideacard">' +
     $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
-                '<div class="marker"></div>' +
+                '<div class="dragboard" id="d'+idea.ib+'"></div><div class="marker"></div>' +
                 '<h1>'+idea.ib+': '+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
                     '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
@@ -127,9 +130,15 @@ function create_card(idea){
                     '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
                 '</div>' +
             '</div>');
+    $(".ideacard").draggable({handle: ".dragboard"});
 
     $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
+    $('#board_wrapper').find('#d'+idea.ib+'').mouseup(function() {
+        moveXY(this.parentNode,idea);
+    });
     place_card(idea);
+
+
 
     $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
         socket.emit('request update cnt', idea);
@@ -146,18 +155,19 @@ function place_card(idea){
     $('#board_wrapper').find('#'+idea.ib+'').css('left',idea.x);
     $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
     $('#board_wrapper').find('#'+idea.ib+'').click(function(){
+
         if(from==0) {
 
             $(this).toggleClass('selected');
             from = this.id;
             $("#from").text(from);
-            alert("set from : "+from);
+            alert("시작 지점 정함 : "+from);
             event.stopPropagation();
         }else{
 
             if(from==this.id){
                 $(this).toggleClass('selected');
-                alert("reset from : "+this.id);
+                alert("시작지점 해제 : "+this.id);
                 from=0;
                 to = [];
                 $("#from").text("지정 안됨");
@@ -173,6 +183,7 @@ function place_card(idea){
                     $("#to").text(to);
                 }
             }
+
             event.stopPropagation();
             return;
         }
@@ -209,6 +220,7 @@ function createEdge(idea) {
         $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
         x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
         y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top
+
 
         fromX=parseInt(idea.x);
         fromY=parseInt(idea.y)
@@ -301,6 +313,10 @@ $(document).ready(function () {
 
     socket.on('update cnt',function(idea){
         $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
+    });
+
+    socket.on('update XY',function(idea){
+        $('#'+idea.ib+'').css({top: idea.y, left: idea.x});
     });
 
     socket.on('Apply Edge Success',function(idea){
