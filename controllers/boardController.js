@@ -35,19 +35,19 @@ module.exports = function(app,io) {
         });
     });
     
-    // /**
-    //  * 내용을 전부 가져오는 소스
-    //  */
-    // app.post('/load', function(req, res) {
-    //     Board.find({isdel:false}, function(err, board) {
-    //         if (err) throw err;
-    //         for (i = 0; i < board.length; i++) {
-    //             var obj = JSON.stringify(board[i]);
-    //             var idea = JSON.parse(obj);
-    //             io.emit('card created', idea);
-    //         }
-    //     });
-    // });
+    /**
+     * 내용을 전부 가져오는 소스
+     */
+    app.post('/load', function(req, res) {
+        Board.find({isdel:false}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                io.emit('card created', idea);
+            }
+        });
+    });
 
     /**
      * Ajax로 json형태로 값을 받는데, 동일한 ib에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
