@@ -12,6 +12,7 @@ var socket = io();
 var maxib=0;
 var from=0;
 var to=[];
+
 function isMaxIb(ib) {
 
     if (ib > maxib) {
@@ -92,11 +93,6 @@ function popupOpen(e,ib){
     e.stopPropagation();
 }
 
-function boundaryCard(e) {
-    alert("아이디어 카드가 겹칩니다. 다른 곳을 지정해 주세요");
-
-    e.stopPropagation();
-}
 function contains(array, obj) {
     for (var i = 0; i < array.length; i++) {
         if (array[i] === obj) {
@@ -110,7 +106,13 @@ function moveXY(card,idea) {
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
+}
 
+function removeIdea(idea){
+    var remove  =confirm("아이디어를 삭제하시겠습니까");
+    if(remove){
+        socket.emit('request removeIdea', idea);
+    }
 }
 /******************************************************************
  * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
@@ -122,7 +124,9 @@ function create_card(idea){
     remove_dial();
     //$('#board_wrapper').append('<div class="boundary" onclick="createCard(event)" id="'+idea.ib+'"><div class="ideacard">' +
     $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
-                '<div class="dragboard" id="d'+idea.ib+'"></div><div class="marker"></div>' +
+                '<div class="dragboard" id="d'+idea.ib+'"></div>' +
+                '<div class="marker"></div>' +
+                '<a class="close" id="close'+idea.ib+'" href="#">X</a>'+
                 '<h1>'+idea.ib+': '+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
                     '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
@@ -136,6 +140,10 @@ function create_card(idea){
     $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
     $('#board_wrapper').find('#d'+idea.ib+'').mouseup(function() {
         moveXY(this.parentNode,idea);
+    });
+    $('#board_wrapper').find('#close'+idea.ib+'').click(function() {
+        removeIdea(idea);
+        event.stopPropagation();
     });
     place_card(idea);
 
@@ -316,6 +324,10 @@ $(document).ready(function () {
 
     socket.on('update cnt',function(idea){
         $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
+    });
+
+    socket.on('remove idea',function(idea){
+        $('#'+idea.ib+'').remove();
     });
 
     socket.on('update XY',function(idea){

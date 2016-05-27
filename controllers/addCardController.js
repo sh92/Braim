@@ -21,7 +21,8 @@ module.exports = function(app,io) {
             x: idea.x,
             y: idea.y,
             cnt: idea.cnt,
-            edge: idea.edge
+            edge: idea.edge,
+            isdel : idea.isdel
         }));
     }
 
@@ -86,7 +87,8 @@ module.exports = function(app,io) {
                 x: x,
                 y: y,
                 cnt: cnt,
-                edge: edge
+                edge: edge,
+                isdel : false
             });
             idea.ib++;
             create_card(idea);
@@ -101,6 +103,12 @@ module.exports = function(app,io) {
         socket.on('request moveXY', function (idea) {
             save_db(idea);
             io.emit('update XY', idea);
+        });
+
+        socket.on('request removeIdea', function (idea) {
+            idea.isdel=true;
+            save_db(idea);
+            io.emit('remove idea', idea);
         });
 
         socket.on('reply', function (ib, reply) {

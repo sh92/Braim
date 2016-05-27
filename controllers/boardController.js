@@ -25,7 +25,7 @@ module.exports = function(app,io) {
      * 내용을 전부 가져오는 소스
      */
     app.get('/load', function(req, res) {
-        Board.find({}, function(err, board) {
+        Board.find({isdel:false}, function(err, board) {
             if (err) throw err;
             for (i = 0; i < board.length; i++) {
                 var obj = JSON.stringify(board[i]);
@@ -35,19 +35,19 @@ module.exports = function(app,io) {
         });
     });
     
-    /**
-     * 내용을 전부 가져오는 소스
-     */
-    app.post('/load', function(req, res) {
-        Board.find({}, function(err, board) {
-            if (err) throw err;
-            for (i = 0; i < board.length; i++) {
-                var obj = JSON.stringify(board[i]);
-                var idea = JSON.parse(obj);
-                io.emit('card created', idea);
-            }
-        });
-    });
+    // /**
+    //  * 내용을 전부 가져오는 소스
+    //  */
+    // app.post('/load', function(req, res) {
+    //     Board.find({isdel:false}, function(err, board) {
+    //         if (err) throw err;
+    //         for (i = 0; i < board.length; i++) {
+    //             var obj = JSON.stringify(board[i]);
+    //             var idea = JSON.parse(obj);
+    //             io.emit('card created', idea);
+    //         }
+    //     });
+    // });
 
     /**
      * Ajax로 json형태로 값을 받는데, 동일한 ib에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
@@ -58,7 +58,7 @@ module.exports = function(app,io) {
         Board.findOne({ ib: req.body.ib}, function (err, findedboard){
             if (err) throw err;
             if (findedboard!=null) {
-                var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge}
+                var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel}
                 Board.findOneAndUpdate(query,update, function(err, board) {
                     if (err) throw err;
                     //res.send('Success');
@@ -72,7 +72,8 @@ module.exports = function(app,io) {
                     x: req.body.x,
                     y: req.body.y,
                     cnt: req.body.cnt,
-                    edge: req.body.edge
+                    edge: req.body.edge,
+                    isdel:req.body.isdel
                 });
                 newBoard.save(function(err) {
                     if (err) throw err;

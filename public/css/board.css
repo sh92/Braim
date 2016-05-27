@@ -26,6 +26,13 @@ body{
     width: 150px;
     height: 35px;
 }
+.close{
+    position: relative;
+    float: right;
+    text-decoration: none;
+    color: red;
+    z-index: 5;
+}
 
 #keyword_input{
     top:70%;
