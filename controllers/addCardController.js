@@ -115,12 +115,11 @@ module.exports = function(app,io) {
         socket.on('request removeIdea', function (idea) {
             idea.isdel=true;
             how ="remove";
-            save_db(ideam,how);
+            save_db(idea,how);
             io.emit('remove idea', idea);
         });
 
         socket.on('request find edge', function (ib) {
-            console.log("request ok"+ib);
             find_Edge(ib);
         });
         socket.on('request EdgeAdd', function (ib,to, how) {

@@ -176,7 +176,6 @@ module.exports = function(app,io) {
             for (i = 0; i < board.length; i++) {
                 var obj = JSON.stringify(board[i]);
                 var idea = JSON.parse(obj);
-                console.log(idea);
                 io.emit("find edge", idea);
             }
         });
