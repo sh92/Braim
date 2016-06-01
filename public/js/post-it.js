@@ -36,6 +36,7 @@ function ideaClass(idea){
         this.edge = idea.edge;
         this.isdel = idea.isdel
         this.rating = idea.rating;
+        this.content = idea.content;
 }
 
 function findIdeaByIb(ibNumber){
@@ -126,7 +127,7 @@ function contains(array, obj) {
     return false;
 }
 
-function moveXY(card,idea,edge) {
+function moveXY(card,idea) {
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
@@ -145,8 +146,10 @@ function removeIdea(idea){
  ******************************************************************/
 function create_card(ideaData){
 
-    ideaObjects.push(ideaData);
-    idea = ideaObjects[ideaObjects.length-1];
+
+    ideaObjects.push(new ideaClass(ideaData));
+    var len = ideaObjects.length;
+    var idea = ideaObjects[len-1];
 
     remove_dial();
     $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
@@ -164,10 +167,10 @@ function create_card(ideaData){
 
     $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
     $('#board_wrapper').find('#d'+idea.ib+'').mouseup(function() {
-        moveXY(this.parentNode,idea);
+        moveXY(this.parentNode,ideaObjects[len-1]);
     });
     $('#board_wrapper').find('#close'+idea.ib+'').click(function() {
-        removeIdea(idea);
+        removeIdea(ideaObjects[len-1]);
         event.stopPropagation();
     });
     place_card(idea);
@@ -338,6 +341,15 @@ function ArrowLineFunction(fromX,fromY,toX,toY,context) {
     // draw the line
     line.drawWithArrowheads(context);
 }
+function ideaUpdate(idea) {
+
+    tempIdea = findIdeaByIb(idea.ib);
+
+    for(var i=0; i<tempIdea.length; i++){
+        tempIdea[i] = idea[i];
+    }
+
+}
 $(document).ready(function () {
     /**************************************************************
      * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
@@ -358,10 +370,12 @@ $(document).ready(function () {
 
 
     socket.on('remove idea',function(idea){
+        ideaUpdate(idea);
         $('#'+idea.ib+'').remove();
     });
 
     socket.on('update XY',function(idea){
+        ideaUpdate(idea);
         $('#'+idea.ib+'').css({top: idea.y, left: idea.x});
         showEdge();
     });
@@ -371,14 +385,17 @@ $(document).ready(function () {
     });
 
     socket.on('find edge',function(idea){
+        ideaUpdate(idea);
         to = idea.edge;
         $("#to").text(to);
     });
     socket.on('Apply Edge Success',function(idea){
+        ideaUpdate(idea);
         createEdge(idea);
     });
 
     socket.on('update reply board',function(idea){
+        ideaUpdate(idea);
         $('#'+idea.ib+'').find('#rating'+idea.ib+'').text(idea.rating);
     });
 
