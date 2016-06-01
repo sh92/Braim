@@ -41,9 +41,9 @@ app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 //controller 사용
+
 htmlController(app);
 accountController(app);
-
 http = require("http").createServer(app);
 var io = require('socket.io').listen(http);
 boardController(app,io);
@@ -52,7 +52,10 @@ addCardController(app,io);
 
 
 io.on('connection', function(socket){
-    console.log('a user connected');
+    //console.log('a user connected');
+    socket.on('chat message', function(msg){
+        console.log('message: ' + msg);
+    });
 });
 
 http.listen(port, function(){

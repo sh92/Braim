@@ -10,7 +10,7 @@
 </head>
 </html>
 <% } else { %>
-    <title>여기에 타이틀</title>
+    <title>아이디어 보드</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/board.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
@@ -27,6 +27,14 @@
         }
     </script>
     <script src="assets/js/post-it.js"></script>
+    <script>
+        var socket = io();
+        $('#chat_input').submit(function () {
+            socket.emit('chat message', document.getElementById('chat_msg').value());
+            document.getElementById('chat_msg').value('');
+            return false;
+        });
+    </script>
 </head>
 <body onload="loadDB()">
 <nav>
@@ -48,12 +56,11 @@
         </div>
     </div>
     <div id="chat_wrapper">
-        <div id="chat_list">
-        </div>
-        <div id="chat_input">
-            <input id = chat_msg type="text"/>
+        <ul id="chat_msg_list"></ul>
+        <form action='' id="chat_input">
+            <input id ="chat_msg" type="text"/>
             <button id="send_msg">send</button>
-        </div>
+        </form>
     </div>
 </div>
 </body>

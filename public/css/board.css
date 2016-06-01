@@ -171,49 +171,41 @@ body{
 
 #chat_wrapper{
     width: 300px;
-    left: 30px;
+    height: 1000px;
     position: relative;
     float:right;
 }
 
-#chat_list{
-
+#chat_msg_list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-#chat_list .user_name{
-
+#chat_msg_list li{
+    padding: 5px 10px;
 }
 
-
-#chat_list .user_icon{
-
-}
-
-#chat_list ul{
-
-}
-
-#chat_list ul li{
-    height:20px;
-    word-break:break-all;
-}
-
-#chat_list ul li:nth-child(odd){
-    height:20px;
-    background: #a6e1ec;
-    word-break:break-all;
+#chat_msg_list li:nth-child(odd){
+    background: #eee;
 }
 
 #chat_input{
-
+    background: #000;
+    padding: 3px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
 
-#chat_intput input#chat_msg{
-    width:340px;
+#chat_input input#chat_msg{
+    border:0;
+    width:75%;
+    height: auto;
 }
 
 #chat_input button#send_msg{
-    width:60px;
+    width:20%;
     background:#2a6496;
     color:white;
 }
