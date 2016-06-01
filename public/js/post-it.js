@@ -79,10 +79,9 @@ function fun_in_dial() {
 }
 
 function reply(e,ib) {
-    var content = prompt("의견:","");
-    if(content !== undefined && content !=null) {
-        socket.emit('reply', ib, content);
-    }
+    var popUrl = "reply?ib="+ib+"";	//팝업창에 출력될 페이지 URL
+    var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
+    window.open(popUrl,"",popOption);
     e.stopPropagation();
 }
 
@@ -92,6 +91,8 @@ function popupOpen(e,ib){
     window.open(popUrl,"",popOption);
     e.stopPropagation();
 }
+
+
 
 function contains(array, obj) {
     for (var i = 0; i < array.length; i++) {
@@ -122,17 +123,17 @@ function removeIdea(idea){
 function create_card(idea){
 
     remove_dial();
-    //$('#board_wrapper').append('<div class="boundary" onclick="createCard(event)" id="'+idea.ib+'"><div class="ideacard">' +
     $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
                 '<div class="dragboard" id="d'+idea.ib+'"></div>' +
                 '<div class="marker"></div>' +
                 '<a class="close" id="close'+idea.ib+'" href="#">X</a>'+
                 '<h1>'+idea.ib+': '+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
-                    '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
                     '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
-                    '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
-                    '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
+                    '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
+                    // '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
+                    // '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
+                    '<h3 id="rating'+idea.ib+'" class="rating inline-block" >'+idea.rating+'</h3>' +
                 '</div>' +
             '</div>');
     $(".ideacard").draggable({handle: ".dragboard"});
@@ -148,11 +149,10 @@ function create_card(idea){
     place_card(idea);
 
 
-
-    $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
-        socket.emit('request update cnt', idea);
-        event.stopPropagation();
-    });
+    // $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
+    //     socket.emit('request update cnt', idea);
+    //     event.stopPropagation();
+    // });
 }
 
 
@@ -247,7 +247,7 @@ function createEdge(idea) {
         }else if(fromX>toX && fromY <toY){ // from이 오른쪽 위에 있을 때
             ArrowLineFunction(fromX+10,fromY-40,toX+80,toY-80,ctx);
         }else{ // from이 오른쪽 아래있거나 그 외
-            ArrowLineFunction(fromX,fromY-40,toX+80,toY,ctx);
+            ArrowLineFunction(fromX,fromY-40,toX+80,toY+10,ctx);
         }
 
         event.stopPropagation();
@@ -322,9 +322,9 @@ $(document).ready(function () {
         fun_in_dial();
     });
 
-    socket.on('update cnt',function(idea){
+    /*socket.on('update cnt',function(idea){
         $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
-    });
+    });*/
 
     socket.on('remove idea',function(idea){
         $('#'+idea.ib+'').remove();
@@ -339,11 +339,15 @@ $(document).ready(function () {
         createEdge(idea);
     });
 
+    socket.on('update reply board',function(idea){
+        $('#'+idea.ib+'').find('#rating'+idea.ib+'').text(idea.rating);
+    });
+
     socket.on('card created',function(idea){
         // 이미 만들어진 카드는 만들지 않기 위해 isMaxIb를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
         if(isMaxIb(idea.ib)) {
             create_card(idea);
-            $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
+            // $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.rating);
         }
     });
 

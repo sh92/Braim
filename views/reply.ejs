@@ -1,0 +1,71 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js" ></script>
+    <script src="assets/js/rating.min.js"></script>
+    <link href="assets/css/rating.min.css" type="text/css" rel="stylesheet" />
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body onload="javascript:window.resizeTo(300,400)">
+<h2><%=ib%>번 아이디어 의견 쓰기</h2>
+<div id="idea_reply"></div>
+<script>
+    /**
+     * Demo in action!
+     */
+    (function() {
+
+        'use strict';
+
+        // SHOP ELEMENT
+        var shop = document.querySelector('#idea_reply');
+
+        // DUMMY DATA
+        var data = [
+            {
+                rating: 0
+            }
+        ];
+
+        // INITIALIZE
+        (function init() {
+            for (var i = 0; i < data.length; i++) {
+                addRatingWidget(buildShopItem(data[i]), data[i]);
+            }
+        })();
+
+        // BUILD SHOP ITEM
+        function buildShopItem(data) {
+            var shopItem = document.createElement('div');
+
+            var html = '<form name="reply_form" action="/api/reply" method="post">' +
+                    '<ul class="c-rating"></ul>' +
+                    '<input id="reply" name="reply"/>'+
+                    '<input type="hidden" name="ib" value="<%=ib%>"/>'+
+                    '<input type="hidden" id="rating" name="rating" value=0/>'+
+                    '<input type="submit" />'+
+                    '</form>';
+
+            shopItem.classList.add('c-shop-item');
+            shopItem.innerHTML = html;
+            shop.appendChild(shopItem);
+
+            return shopItem;
+        }
+
+        // ADD RATING WIDGET
+        function addRatingWidget(shopItem, data) {
+            var ratingElement = shopItem.querySelector('.c-rating');
+            var currentRating = data.rating;
+            var maxRating = 5;
+            var callback = function(rating) {
+                var input = document.getElementById('rating');
+                input.value=rating;
+            };
+            var r = rating(ratingElement, currentRating, maxRating, callback);
+        }
+
+    })();
+
+</script>
+</body>
+</html>

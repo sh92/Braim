@@ -21,18 +21,7 @@ body{
 #board{
 
 }
-.dragboard{
-    position: absolute;
-    width: 150px;
-    height: 35px;
-}
-.close{
-    position: relative;
-    float: right;
-    text-decoration: none;
-    color: red;
-    z-index: 5;
-}
+
 
 #keyword_input{
     top:70%;
@@ -70,17 +59,9 @@ body{
 #idea_keyword_wrapper{
 
 }
-.cntIb{
-    display: inline-block;padding-left: 1px;font-size:5px
-}
-.good{
-    width: 20px;height: 20px; display: inline-block;
-}
-.inline-block {
-    display: inline-block;
-}
+
 .bottom_idea{
-    height: 25px;text-align: right;
+    height: 25px;text-align: left;
 }
 .ideacard{
     border-radius: 4px;
@@ -240,4 +221,31 @@ body{
 #endText{
     left: 100px;
     position: relative;
+}
+.rating{
+    padding-left: 8px;
+    margin: 0px;
+    color:red;
+}
+.cntIb{
+    display: inline-block;padding-left: 1px;font-size:5px
+}
+.good{
+    width: 20px;height: 20px; display: inline-block;
+}
+.inline-block {
+    display: inline-block;
+}
+.dragboard{
+    position: absolute;
+    width: 150px;
+    height: 35px;
+}
+.close{
+    position: relative;
+    float: right;
+    text-decoration: none;
+    color: black;
+    font-size:13px;
+    z-index: 5;
 }

@@ -11,7 +11,8 @@ var Schema = mongoose.Schema;
 
 var replySchema = new Schema({
     ib : String,
-    reply : String
+    reply : String,
+    rating : String
 });
 
 var Reply = mongoose.model('Reply', replySchema);

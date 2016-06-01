@@ -58,7 +58,7 @@ module.exports = function(app,io) {
         Board.findOne({ ib: req.body.ib}, function (err, findedboard){
             if (err) throw err;
             if (findedboard!=null) {
-                var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel}
+                var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel, rating: req.body.rating}
                 Board.findOneAndUpdate(query,update, function(err, board) {
                     if (err) throw err;
                     //res.send('Success');
@@ -73,7 +73,8 @@ module.exports = function(app,io) {
                     y: req.body.y,
                     cnt: req.body.cnt,
                     edge: req.body.edge,
-                    isdel:req.body.isdel
+                    isdel:req.body.isdel,
+                    rating: req.body.rating
                 });
                 newBoard.save(function(err) {
                     if (err) throw err;
@@ -93,11 +94,36 @@ module.exports = function(app,io) {
     app.post('/api/reply', jsonParser,function(req, res) {
         var newReply = Reply({
             ib: req.body.ib,
-            reply: req.body.reply
+            reply: req.body.reply,
+            rating: req.body.rating
         });
         newReply.save(function(err) {
             if (err) throw err;
-            //res.send('Success');
+        });
+
+        var update ={ib: req.body.ib, rating:req.body.rating};
+        var query={ib:req.body.ib};
+        Board.find(query, function(err, board) {
+            if (err) throw err;
+            for (var i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                var old =parseFloat(idea.rating)*parseFloat(idea.cnt);
+                var newRating= parseFloat(req.body.rating)+0.0;
+
+                var newCnt = parseFloat(idea.cnt)+1;
+
+                idea.rating = Math.floor((old +newRating)*10 /(newCnt)) / 10 + 0.0;
+                idea.cnt = newCnt;
+
+                var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating}
+                Board.findOneAndUpdate(query,update, function(err, board2) {
+                    if (err) throw err;
+                    io.emit("update reply board", update);
+                    res.render("success",{});
+                });
+
+            }
         });
     });
 
@@ -111,7 +137,7 @@ module.exports = function(app,io) {
             for (var i = 0; i < board.length; i++) {
                 var obj = JSON.stringify(board[i]);
                 var idea = JSON.parse(obj);
-                var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge:req.body.edge}
+                var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating}
                 Board.findOneAndUpdate(query,update, function(err, board2) {
                     if (err) throw err;
                     //res.send('Success');
@@ -140,6 +166,7 @@ module.exports = function(app,io) {
     });
 
 
+
     /**
      * 내용을 응답에 대해서 전부 가져오는 소스
      */
@@ -149,6 +176,15 @@ module.exports = function(app,io) {
             res.render('popup', { board:board});
         });
     });
+
+
+    /**
+     * 응답에 대한 popup창
+     */
+    app.get('/reply', function(req, res) {
+        res.render('reply', {ib:req.query.ib});
+    });
+
 
     /**
      * 삭제할 때사용

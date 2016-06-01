@@ -22,20 +22,11 @@ module.exports = function(app,io) {
             y: idea.y,
             cnt: idea.cnt,
             edge: idea.edge,
-            isdel : idea.isdel
+            isdel : idea.isdel,
+            rating : idea.rating
         }));
     }
-
-    function save_reply(ib, reply) {
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:3001/api/reply');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            ib: ib,
-            reply: reply
-        }));
-    }
+    
 
     function save_Edge(ib, edge) {
 
@@ -79,7 +70,7 @@ module.exports = function(app,io) {
         });
         //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
-        socket.on('request create card', function (content,ib,color,x,y,cnt,edge) {
+        socket.on('request create card', function (content,ib,color,x,y,cnt,edge,rating) {
             var idea = Board({
                 content: content,
                 ib: ib,
@@ -88,7 +79,8 @@ module.exports = function(app,io) {
                 y: y,
                 cnt: cnt,
                 edge: edge,
-                isdel : false
+                isdel : false,
+                rating : "0.0"
             });
             idea.ib++;
             create_card(idea);
@@ -111,9 +103,6 @@ module.exports = function(app,io) {
             io.emit('remove idea', idea);
         });
 
-        socket.on('reply', function (ib, reply) {
-            save_reply(ib, reply);
-        });
 
         socket.on('request EdgeAdd', function (ib,edge) {
             save_Edge(ib, edge);

@@ -2,20 +2,55 @@
 <head>
     <link href="assets/css/style.css" type="text/css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-1.11.3.min.js" ></script>
+    <script src="assets/js/rating.min.js"></script>
+    <link href="assets/css/rating.min.css" type="text/css" rel="stylesheet" />
 </head>
-<script>
-     for (i = 0; i < board.length; i++) {
-         var obj = JSON.stringify(board[i]);
-         var idea = JSON.parse(obj);
-
-     }
-</script>
 <body onload="javascript:window.resizeTo(300,400)">
-    <h2>댓글 내용</h2>
+    <h2>의견 내용 보기 </h2>
     <ul>
         <% for(i =0 ; i<board.length ; i++ ) {%>
         <li>
                 <%=board[i].reply%>
+                <ul class="c-rating">
+                    <% rating=board[i].rating%>
+                    <% if(rating=='0'){%>
+                        <li class="c-rating__item" data-index="0"></li>
+                        <li class="c-rating__item" data-index="1"></li>
+                        <li class="c-rating__item" data-index="2"></li>
+                        <li class="c-rating__item" data-index="3"></li>
+                        <li class="c-rating__item" data-index="4"></li>
+                    <%}else if(rating=='1'){%>
+                        <li class="c-rating__item is-active" data-index="0"></li>
+                        <li class="c-rating__item" data-index="1"></li>
+                        <li class="c-rating__item" data-index="2"></li>
+                        <li class="c-rating__item" data-index="3"></li>
+                        <li class="c-rating__item" data-index="4"></li>
+                    <%}else if(rating=='2'){%>
+                        <li class="c-rating__item is-active" data-index="0"></li>
+                        <li class="c-rating__item is-active" data-index="1"></li>
+                        <li class="c-rating__item" data-index="2"></li>
+                        <li class="c-rating__item" data-index="3"></li>
+                        <li class="c-rating__item" data-index="4"></li>
+                    <%}else if(rating=='3'){%>
+                        <li class="c-rating__item is-active" data-index="0"></li>
+                        <li class="c-rating__item is-active" data-index="1"></li>
+                        <li class="c-rating__item is-active" data-index="2"></li>
+                        <li class="c-rating__item" data-index="3"></li>
+                        <li class="c-rating__item" data-index="4"></li>
+                    <%}else if(rating=='4'){%>
+                        <li class="c-rating__item is-active" data-index="0"></li>
+                        <li class="c-rating__item is-active" data-index="1"></li>
+                        <li class="c-rating__item is-active" data-index="2"></li>
+                        <li class="c-rating__item is-active" data-index="3"></li>
+                        <li class="c-rating__item" data-index="4"></li>
+                    <%}else if(rating=='5'){%>
+                        <li class="c-rating__item is-active" data-index="0"></li>
+                        <li class="c-rating__item is-active" data-index="1"></li>
+                        <li class="c-rating__item is-active" data-index="2"></li>
+                        <li class="c-rating__item is-active" data-index="3"></li>
+                        <li class="c-rating__item is-active" data-index="4"></li>
+                    <%}%>
+                </ul>
         </li>
         <%}%>
     </ul>
