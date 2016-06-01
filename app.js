@@ -36,7 +36,7 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 3001;
 app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
