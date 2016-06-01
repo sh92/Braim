@@ -10,16 +10,6 @@ module.exports = function(app,io) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
-    //내용 검색을 하는 소스
-    app.get('/api/board/:content', function(req, res) {
-
-        Board.find({ content: req.params.content }, function(err, board) {
-            if (err) throw err;
-
-            res.send(board);
-        });
-
-    });
 
     /**
      * 내용을 전부 가져오는 소스
@@ -62,6 +52,10 @@ module.exports = function(app,io) {
                 Board.findOneAndUpdate(query,update, function(err, board) {
                     if (err) throw err;
                     //res.send('Success');
+                    if(req.body.how =="moveXY") {
+                        io.emit("Remove edge", {});
+                        io.emit('update XY', update);
+                    }
                 });
             } else {
 
@@ -88,7 +82,7 @@ module.exports = function(app,io) {
 
 
     /**
-     * Ajax로 json형태로 reply를 받음
+     * Post로 전달받은 것을 json형태로 reply를 받음
      */
     var jsonParser =bodyParser.json();
     app.post('/api/reply', jsonParser,function(req, res) {
@@ -131,21 +125,29 @@ module.exports = function(app,io) {
      * Ajax로 json형태로 edge 받음
      */
     var jsonParser =bodyParser.json();
-    app.post('/api/edge', jsonParser,function(req, res) {
-        var query={ib:req.body.ib};
-        Board.find(query, function(err, board) {
-            for (var i = 0; i < board.length; i++) {
-                var obj = JSON.stringify(board[i]);
-                var idea = JSON.parse(obj);
-                var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating}
-                Board.findOneAndUpdate(query,update, function(err, board2) {
-                    if (err) throw err;
-                    //res.send('Success');
-                });
-                io.emit("Apply Edge Success", update);
-            }
+        app.post('/api/edge', jsonParser,function(req, res) {
+            var query={ib:req.body.ib};
+            Board.find(query, function(err, board) {
+                for (var i = 0; i < board.length; i++) {
+                    var obj = JSON.stringify(board[i]);
+                    var idea = JSON.parse(obj);
+                    if(req.body.how == 'add') {
+                        idea.edge.push(req.body.to);
+                    }else if (req.body.how== 'cancel'){
+                        console.log(idea.edge);
+                        console.log(idea.edge.indexOf(req.body.to));
+                        idea.edge.splice(idea.edge.indexOf(req.body.to), 1);
+                    }
+                    var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge, isdel: idea.isdel, rating: idea.rating}
+                    io.emit("Remove edge", {});
+                    Board.findOneAndUpdate(query,update, function(err, board2) {
+                        if (err) throw err;
+                        //res.send('Success');
+                        io.emit("Apply Edge Success", update);
+                    });
+                }
 
-        });
+            });
 
     });
 
@@ -164,6 +166,26 @@ module.exports = function(app,io) {
             }
         });
     });
+
+    /**
+     * from 으로 부터 to의 내용 가져옴
+     */
+    var jsonParser =bodyParser.json();
+    app.post('/api/findEdge', jsonParser,function(req, res) {
+        console.log("!"+req.query.ib);
+        console.log("!!"+req.body.ib);
+
+        Board.find({ib: req.body.ib}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                console.log(idea);
+                io.emit("find edge", idea);
+            }
+        });
+    });
+
 
 
 

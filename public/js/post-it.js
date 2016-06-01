@@ -131,8 +131,6 @@ function create_card(idea){
                 '<div class="bottom_idea">' +
                     '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
                     '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
-                    // '<img class="good" src="assets/img/good.png" id="good'+idea.ib+'"/>' +
-                    // '<h3 id="cnt'+idea.ib+'" class="cntIb" >'+idea.cnt+'</h3>' +
                     '<h3 id="rating'+idea.ib+'" class="rating inline-block" >'+idea.rating+'</h3>' +
                 '</div>' +
             '</div>');
@@ -149,10 +147,6 @@ function create_card(idea){
     place_card(idea);
 
 
-    // $('#'+idea.ib+'').find('#good'+idea.ib+'').click(function(){
-    //     socket.emit('request update cnt', idea);
-    //     event.stopPropagation();
-    // });
 }
 
 
@@ -169,6 +163,7 @@ function place_card(idea){
 
             $(this).toggleClass('selected');
             from = this.id;
+            findEdge(from);
             $("#from").text(from);
             alert("시작 지점 선택 : "+from);
             event.stopPropagation();
@@ -183,13 +178,23 @@ function place_card(idea){
                 $("#to").text("지정 안됨");
             }else{
                 if(contains(to,this.id)){
-                    alert("도착 지점 취소 : "+this.id);
-                    to.splice($.inArray(this.id, to),1);
-                    $("#to").text(to);
+                     var done = confirm("연결 해제 하시겠습니까?");
+                     if(done) {
+                        alert("도착 지점 취소 : " + this.id);
+                        to.splice($.inArray(this.id, to), 1);
+                        $("#to").text(to);
+                         applyEdge(this.id,"cancel");
+                         showEdge();
+                     }
                 }else{
-                    to.push(this.id);
-                    alert("도착 지점 선택 : "+to);
-                    $("#to").text(to);
+                     var done = confirm("연결 하시겠습니까?");
+                     if(done){
+                         to.push(this.id);
+                         alert("도착 지점 선택 : "+to);
+                        $("#to").text(to);
+                         applyEdge(this.id,"add");
+                         showEdge();
+                     }
                 }
             }
 
@@ -199,11 +204,14 @@ function place_card(idea){
     });
 }
 
-function applyEdge() {
+function findEdge(ib){
+    socket.emit("request find edge", ib);
+}
+function applyEdge(appliedTo, how) {
     if(from==0){
         alert('card가 선택되지 않았습니다');
     }else {
-        socket.emit("request EdgeAdd", from, to);
+        socket.emit("request EdgeAdd", from, appliedTo, how);
     }
 }
 function showEdge(){
@@ -322,9 +330,6 @@ $(document).ready(function () {
         fun_in_dial();
     });
 
-    /*socket.on('update cnt',function(idea){
-        $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.cnt);
-    });*/
 
     socket.on('remove idea',function(idea){
         $('#'+idea.ib+'').remove();
@@ -334,8 +339,18 @@ $(document).ready(function () {
         $('#'+idea.ib+'').css({top: idea.y, left: idea.x});
         showEdge();
     });
+    
+    socket.on('Remove edge',function(){
+        removeEdge();
+    });
 
+    socket.on('find edge',function(idea){
+        to = idea.edge;
+        $("#to").text(to);
+        showEdge();
+    });
     socket.on('Apply Edge Success',function(idea){
+
         createEdge(idea);
     });
 
