@@ -347,10 +347,8 @@ $(document).ready(function () {
     socket.on('find edge',function(idea){
         to = idea.edge;
         $("#to").text(to);
-        showEdge();
     });
     socket.on('Apply Edge Success',function(idea){
-
         createEdge(idea);
     });
 
@@ -365,6 +363,5 @@ $(document).ready(function () {
             // $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.rating);
         }
     });
-
 
 });

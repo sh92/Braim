@@ -24,7 +24,7 @@ module.exports = function(app,io) {
             }
         });
     });
-    
+
     /**
      * 내용을 전부 가져오는 소스
      */
@@ -48,12 +48,12 @@ module.exports = function(app,io) {
         Board.findOne({ ib: req.body.ib}, function (err, findedboard){
             if (err) throw err;
             if (findedboard!=null) {
+                //io.emit("Remove edge", {});
                 var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel, rating: req.body.rating}
                 Board.findOneAndUpdate(query,update, function(err, board) {
                     if (err) throw err;
                     //res.send('Success');
                     if(req.body.how =="moveXY") {
-                        io.emit("Remove edge", {});
                         io.emit('update XY', update);
                     }
                 });
@@ -134,12 +134,10 @@ module.exports = function(app,io) {
                     if(req.body.how == 'add') {
                         idea.edge.push(req.body.to);
                     }else if (req.body.how== 'cancel'){
-                        console.log(idea.edge);
-                        console.log(idea.edge.indexOf(req.body.to));
+                        io.emit("Remove edge", {});
                         idea.edge.splice(idea.edge.indexOf(req.body.to), 1);
                     }
                     var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge, isdel: idea.isdel, rating: idea.rating}
-                    io.emit("Remove edge", {});
                     Board.findOneAndUpdate(query,update, function(err, board2) {
                         if (err) throw err;
                         //res.send('Success');
@@ -172,8 +170,6 @@ module.exports = function(app,io) {
      */
     var jsonParser =bodyParser.json();
     app.post('/api/findEdge', jsonParser,function(req, res) {
-        console.log("!"+req.query.ib);
-        console.log("!!"+req.body.ib);
 
         Board.find({ib: req.body.ib}, function(err, board) {
             if (err) throw err;
