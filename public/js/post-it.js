@@ -22,6 +22,29 @@ function isMaxIb(ib) {
     return false;
 }
 
+
+// idea class array
+var ideaObjects = [];
+
+// idea class
+function ideaClass(idea){
+        this.ib = idea.ib;
+        this.color = idea.color;
+        this.x = idea.x;
+        this.y = idea.y;
+        this.cnt = idea.cnt;
+        this.edge = idea.edge;
+        this.isdel = idea.isdel
+        this.rating = idea.rating;
+}
+
+function findIdeaByIb(ibNumber){
+    for(var i=0; i<ideaObjects.length; i++){
+        if(ideaObjects[i].ib == ibNumber)
+            return ideaObjects[i];
+    }
+}
+
 /******************************************************************
  * 다이얼로그 삭제 기능. 페이드아웃후 해당 오브젝트를 제거하도록 작동함.
  ******************************************************************/
@@ -103,7 +126,7 @@ function contains(array, obj) {
     return false;
 }
 
-function moveXY(card,idea) {
+function moveXY(card,idea,edge) {
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
@@ -120,7 +143,10 @@ function removeIdea(idea){
  * ideacards배열에 새 오브젝트를 생성하여 추가한다.
  * 이후에는 카드의 위치를 자동으로 배열해준다.
  ******************************************************************/
-function create_card(idea){
+function create_card(ideaData){
+
+    ideaObjects.push(ideaData);
+    idea = ideaObjects[ideaObjects.length-1];
 
     remove_dial();
     $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
@@ -347,10 +373,8 @@ $(document).ready(function () {
     socket.on('find edge',function(idea){
         to = idea.edge;
         $("#to").text(to);
-        showEdge();
     });
     socket.on('Apply Edge Success',function(idea){
-
         createEdge(idea);
     });
 
@@ -365,6 +389,5 @@ $(document).ready(function () {
             // $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.rating);
         }
     });
-
 
 });
