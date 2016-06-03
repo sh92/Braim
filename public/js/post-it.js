@@ -252,10 +252,13 @@ function showEdge(){
 function removeEdge() {
     $('#board_wrapper').find(".edgeGroup").remove();
 }
+function removeEdgeIB(ib) {
+    $('#board_wrapper').find(".edgeClass"+ib+"").remove();
+}
 
 function createEdge(idea) {
+    removeEdgeIB(idea.ib);
     for (var i = 0; i < idea.edge.length; i++) {
-
 
         var isAlredy = document.getElementById("'" + idea.edge[i] + 'edgeTo' + idea.ib + "'");
         if (isAlredy !== "undefined") {
@@ -263,7 +266,7 @@ function createEdge(idea) {
         }
 
 
-        $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
+        $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup edgeClass'+idea.ib+'" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
 
         $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
         x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;

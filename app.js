@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy
 
-mongoose.connect('mongodb://localhost/passport_local_mongoose');
+mongoose.connect('mongodb://localhost/ideadb');
 //mongoose.connect(config.getDbConnectionString())
 
 //controller 선언
