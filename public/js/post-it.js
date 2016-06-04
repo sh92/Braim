@@ -34,7 +34,7 @@ function ideaClass(idea){
         this.y = idea.y;
         this.cnt = idea.cnt;
         this.edge = idea.edge;
-        this.isdel = idea.isdel
+        this.isdel = idea.isdel;
         this.rating = idea.rating;
         this.content = idea.content;
 }
@@ -128,6 +128,7 @@ function contains(array, obj) {
 }
 
 function moveXY(card,idea) {
+    idea = findIdeaByIb(idea.ib);
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
@@ -167,10 +168,10 @@ function create_card(ideaData){
 
     $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
     $('#board_wrapper').find('#d'+idea.ib+'').mouseup(function() {
-        moveXY(this.parentNode,ideaObjects[len-1]);
+        moveXY(this.parentNode,idea);
     });
     $('#board_wrapper').find('#close'+idea.ib+'').click(function() {
-        removeIdea(ideaObjects[len-1]);
+        removeIdea(findIdeaByIb(idea.ib));
         event.stopPropagation();
     });
     place_card(idea);
@@ -184,10 +185,10 @@ function create_card(ideaData){
  * 아직 미구현.
  ******************************************************************/
 function place_card(idea){
+    idea = findIdeaByIb(idea.ib);
     $('#board_wrapper').find('#'+idea.ib+'').css('left',idea.x);
     $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
     $('#board_wrapper').find('#'+idea.ib+'').click(function(){
-
         if(from==0) {
 
             $(this).toggleClass('selected');
@@ -205,6 +206,7 @@ function place_card(idea){
                 to = [];
                 $("#from").text("지정 안됨");
                 $("#to").text("지정 안됨");
+                
             }else{
                 if(contains(to,this.id)){
                      var done = confirm("연결 해제 하시겠습니까?");
@@ -213,7 +215,7 @@ function place_card(idea){
                         to.splice($.inArray(this.id, to), 1);
                         $("#to").text(to);
                          applyEdge(this.id,"cancel");
-                         showEdge();
+
                      }
                 }else{
                      var done = confirm("연결 하시겠습니까?");
@@ -222,7 +224,7 @@ function place_card(idea){
                          alert("도착 지점 선택 : "+to);
                         $("#to").text(to);
                          applyEdge(this.id,"add");
-                         showEdge();
+
                      }
                 }
             }
@@ -258,40 +260,42 @@ function removeEdgeIB(ib) {
 
 function createEdge(idea) {
     removeEdgeIB(idea.ib);
-    for (var i = 0; i < idea.edge.length; i++) {
+    if (idea.edge != null) {
+        for (var i = 0; i < idea.edge.length; i++) {
 
-        var isAlredy = document.getElementById("'" + idea.edge[i] + 'edgeTo' + idea.ib + "'");
-        if (isAlredy !== "undefined") {
-            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).remove();
+            var isAlredy = document.getElementById("'" + idea.edge[i] + 'edgeTo' + idea.ib + "'");
+            if (isAlredy !== "undefined") {
+                $("#" + idea.edge[i] + 'edgeTo' + idea.ib).remove();
+            }
+
+
+            $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup edgeClass' + idea.ib + '" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
+
+            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
+            x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
+            y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top
+
+
+            fromX = parseInt(idea.x);
+            fromY = parseInt(idea.y)
+            toX = parseInt(x);
+            toY = parseInt(y);
+
+            var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.ib)[0];
+            var ctx = canvas.getContext('2d');
+            if (fromX < toX && fromY < toY) { // from이 왼쪽 위에 있을 때
+                ArrowLineFunction(fromX + 160, fromY - 8, toX, toY - 80, ctx);
+            } else if (fromX < toX && fromY > toY) {  // from이 왼쪽 아래 있을 때
+                ArrowLineFunction(fromX + 160, fromY - 80, toX, toY - 10, ctx);
+            } else if (fromX > toX && fromY < toY) { // from이 오른쪽 위에 있을 때
+                ArrowLineFunction(fromX, fromY - 10, toX + 160, toY - 80, ctx);
+            } else { // from이 오른쪽 아래있거나 그 외
+                ArrowLineFunction(fromX, fromY - 80, toX + 160, toY -10, ctx);
+            }
+
         }
-
-
-        $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup edgeClass'+idea.ib+'" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
-
-        $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
-        x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
-        y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top
-
-
-        fromX=parseInt(idea.x);
-        fromY=parseInt(idea.y)
-        toX=parseInt(x);
-        toY=parseInt(y);
-
-        var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.ib)[0];
-        var ctx = canvas.getContext('2d');
-        if(fromX<toX && fromY <toY){ // from이 왼쪽 위에 있을 때
-            ArrowLineFunction(fromX+160,fromY-8,toX,toY-40,ctx);
-        }else if(fromX<toX && fromY >toY){  // from이 왼쪽 아래 있을 때
-            ArrowLineFunction(fromX+160,fromY-80,toX,toY-40,ctx);
-        }else if(fromX>toX && fromY <toY){ // from이 오른쪽 위에 있을 때
-            ArrowLineFunction(fromX+10,fromY-40,toX+80,toY-80,ctx);
-        }else{ // from이 오른쪽 아래있거나 그 외
-            ArrowLineFunction(fromX,fromY-40,toX+80,toY+10,ctx);
-        }
-
-        event.stopPropagation();
     }
+    event.stopPropagation();
 }
 
 
@@ -347,10 +351,8 @@ function ArrowLineFunction(fromX,fromY,toX,toY,context) {
 function ideaUpdate(idea) {
 
     tempIdea = findIdeaByIb(idea.ib);
+    tempIdea.edge  = idea.edge;
 
-    for(var i=0; i<tempIdea.length; i++){
-        tempIdea[i] = idea[i];
-    }
 
 }
 $(document).ready(function () {
