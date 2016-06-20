@@ -6,7 +6,7 @@
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body onload="javascript:window.resizeTo(300,400)">
-<h2><%=ib%>번 아이디어 의견 쓰기</h2>
+<h2><%=no%>번 아이디어 의견 쓰기</h2>
 <div id="idea_reply"></div>
 <script>
     /**
@@ -16,10 +16,8 @@
 
         'use strict';
 
-        // SHOP ELEMENT
-        var shop = document.querySelector('#idea_reply');
+        var replyBoard = document.querySelector('#idea_reply');
 
-        // DUMMY DATA
         var data = [
             {
                 rating: 0
@@ -35,21 +33,21 @@
 
         // BUILD SHOP ITEM
         function buildShopItem(data) {
-            var shopItem = document.createElement('div');
+            var replyItem = document.createElement('div');
 
             var html = '<form name="reply_form" action="/api/reply" method="post">' +
                     '<ul class="c-rating"></ul>' +
                     '<input id="reply" name="reply"/>'+
-                    '<input type="hidden" name="ib" value="<%=ib%>"/>'+
+                    '<input type="hidden" name="no" value="<%=no%>"/>'+
                     '<input type="hidden" id="rating" name="rating" value=0/>'+
                     '<input type="submit" />'+
                     '</form>';
 
-            shopItem.classList.add('c-shop-item');
-            shopItem.innerHTML = html;
-            shop.appendChild(shopItem);
+            replyItem.classList.add('c-shop-item');
+            replyItem.innerHTML = html;
+            replyBoard.appendChild(replyItem);
 
-            return shopItem;
+            return replyItem;
         }
 
         // ADD RATING WIDGET

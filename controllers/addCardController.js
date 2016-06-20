@@ -1,22 +1,14 @@
-/**
- * Created by withGod on 5/3/16.
- */
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var Board = require('../model/board_model');
 
 module.exports = function(app,io) {
-
-    /******************************************************************
-     * Database에 Ajax를 통해 비동기적으로 데이터를 저장해주는 소스
-     ******************************************************************/
     function save_db(idea,how) {
-
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/board');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
             content: idea.content,
-            ib: idea.ib,
+            no: idea.no,
             color: idea.color,
             x: idea.x,
             y: idea.y,
@@ -29,13 +21,13 @@ module.exports = function(app,io) {
     }
 
 
-    function save_Edge(ib, to,how) {
+    function save_Edge(no, to,how) {
 
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/edge');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
-            ib: ib,
+            no: no,
             to: to,
             how :  how
         }));
@@ -48,22 +40,15 @@ module.exports = function(app,io) {
         xhr.send();
     }
 
-    function find_Edge(ib) {
+    function find_Edge(no) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/findEdge');
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({
-            ib: ib
+            no: no
         }));
     }
 
-
-
-    /******************************************************************
-     * 다이얼로그에 작성된 내용을 바탕으로 카드를 생성해주는 함수.
-     * ideacards배열에 새 오브젝트를 생성하여 추가한다.
-     * 이후에는 만들어진 카드의 값들을 다시 클라이언트로 넘겨준다.
-     ******************************************************************/
     function create_card(idea) {
         how="create";
         save_db(idea,how);
@@ -76,18 +61,16 @@ module.exports = function(app,io) {
      *******************************************************************/
     io.on('connection', function (socket) {
         io.sockets.connected[socket.id].emit('motd', "Welcome to chatroom");
-        //접속이 되었을 때 환영 메시지를보냄.
 
         socket.on('send msg', function (msg) {
             console.log(msg);
             io.emit('receive msg', msg);
         });
-        //메시지전송요청을 받으면, 해당 메시지를 전체에 브로드캐스팅.
 
-        socket.on('request create card', function (content,ib,color,x,y,cnt,edge,rating) {
+        socket.on('request create card', function (content,no,color,x,y,cnt,edge,rating) {
             var idea = Board({
                 content: content,
-                ib: ib,
+                no: no,
                 color: color,
                 x: x,
                 y: y,
@@ -96,7 +79,7 @@ module.exports = function(app,io) {
                 isdel : false,
                 rating : "0.0"
             });
-            idea.ib++;
+            idea.no++;
             create_card(idea);
         });
 
@@ -119,13 +102,13 @@ module.exports = function(app,io) {
             io.emit('remove idea', idea);
         });
 
-        socket.on('request find edge', function (ib) {
-            find_Edge(ib);
+        socket.on('request find edge', function (no) {
+            find_Edge(no);
         });
-        socket.on('request EdgeAdd', function (ib,to, how) {
-            save_Edge(ib, to, how);
+        socket.on('request EdgeAdd', function (no,to, how) {
+            save_Edge(no, to, how);
         });
-        socket.on('request showEdge', function (ib,edge) {
+        socket.on('request showEdge', function (no,edge) {
             show_Edge();
         });
     });

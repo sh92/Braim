@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/board.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
-    <!--<script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>-->
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -33,9 +32,6 @@
 </form>
 <nav>
     <span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.
-    <!--<input type=button value="관계 적용" onclick="applyEdge()"/>-->
-    <!--<input type=button value="관계 보기" onclick="showEdge()"/>-->
-    <!--<input type=button value="관계 보지 않기" onclick="removeEdge()"/>-->
     <br>
     <div class="inline-block">선택한 시작 지점 :<p id="from" class="inline-block"></p></div>
     <div class="inline-block" id="endText">선택한 도착 지점 :<p id="to" class="inline-block"></p></div>
@@ -58,15 +54,15 @@
         </form>
 		<script>
 		      var socket = io();
-	      $('form').submit(function(){
-						          socket.emit('chat message', $('#m').val());
-								          $('#m').val('');
-										          return false;
-												        });
+	            $('form').submit(function(){
+                    socket.emit('chat message', $('#m').val());
+                    $('#m').val('');
+                    return false;
+                });
 		        socket.on('chat message', function(msg){
-								        $('#chat_list').append($('<li>').text(msg));
-										      });
-				    </script>
+                    $('#chat_list').append($('<li>').text(msg));
+                });
+        </script>
     </div>
 </div>
 </body>

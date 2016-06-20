@@ -1,6 +1,3 @@
-/**
- * Created by withGod on 5/4/16.
- */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     passportLocalMongoose = require('passport-local-mongoose');

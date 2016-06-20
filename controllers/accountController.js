@@ -2,12 +2,10 @@
  * 로그인 및 회원가입에 대한 Controller로 실질적으로 이곳에서 처리
  */
 var Account = require('../model/account_model')
-  , bodyParser = require('body-parser')
   , passport = require("passport");
 
 module.exports = function(app) {
     app.get('/', function(req, res) {
-        // console.log(req.user); //for checking login function
         res.render('index', { User : req.user});
     });
 

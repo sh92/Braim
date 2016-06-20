@@ -1,6 +1,3 @@
-/**
- * Created by withGod on 5/4/16.
- */
 var Board = require('../model/board_model');
 var Reply = require('../model/reply_model');
 var bodyParser = require('body-parser');
@@ -11,9 +8,6 @@ module.exports = function(app,io) {
     app.use(bodyParser.urlencoded({ extended: true }));
 
 
-    /**
-     * 내용을 전부 가져오는 소스
-     */
     app.get('/load', function(req, res) {
         Board.find({isdel:false}, function(err, board) {
             if (err) throw err;
@@ -40,19 +34,21 @@ module.exports = function(app,io) {
     });
 
     /**
-     * Ajax로 json형태로 값을 받는데, 동일한 ib에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
+     * Ajax로 json형태로 값을 받는데, 동일한 no에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
      */
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
-        var query={ib:req.body.ib};
-        Board.findOne({ ib: req.body.ib}, function (err, findedboard){
+        var query={no:req.body.no};
+        Board.findOne({ no: req.body.no}, function (err, findedboard){
             if (err) throw err;
-            if (findedboard!=null) {
-                //io.emit("Remove edge", {});
-                var update = {content: req.body.content, ib: req.body.ib, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel, rating: req.body.rating}
+            function shouldUpdate() {
+                return findedboard != null;
+            }
+
+            if (shouldUpdate()) {
+                var update = {content: req.body.content, no: req.body.no, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel, rating: req.body.rating}
                 Board.findOneAndUpdate(query,update, function(err, board) {
                     if (err) throw err;
-                    //res.send('Success');
                     if(req.body.how =="moveXY") {
                         io.emit('update XY', update);
                     }
@@ -61,7 +57,7 @@ module.exports = function(app,io) {
 
                 var newBoard = Board({
                     content: req.body.content,
-                    ib: req.body.ib,
+                    no: req.body.no,
                     color: req.body.color,
                     x: req.body.x,
                     y: req.body.y,
@@ -87,7 +83,7 @@ module.exports = function(app,io) {
     var jsonParser =bodyParser.json();
     app.post('/api/reply', jsonParser,function(req, res) {
         var newReply = Reply({
-            ib: req.body.ib,
+            no: req.body.no,
             reply: req.body.reply,
             rating: req.body.rating
         });
@@ -95,8 +91,8 @@ module.exports = function(app,io) {
             if (err) throw err;
         });
 
-        var update ={ib: req.body.ib, rating:req.body.rating};
-        var query={ib:req.body.ib};
+        var update ={no: req.body.no, rating:req.body.rating};
+        var query={no:req.body.no};
         Board.find(query, function(err, board) {
             if (err) throw err;
             for (var i = 0; i < board.length; i++) {
@@ -110,7 +106,7 @@ module.exports = function(app,io) {
                 idea.rating = Math.floor((old +newRating)*10 /(newCnt)) / 10 + 0.0;
                 idea.cnt = newCnt;
 
-                var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating}
+                var update = {content: idea.content, no: idea.no, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating}
                 Board.findOneAndUpdate(query,update, function(err, board2) {
                     if (err) throw err;
                     io.emit("update reply board", update);
@@ -126,7 +122,7 @@ module.exports = function(app,io) {
      */
     var jsonParser =bodyParser.json();
         app.post('/api/edge', jsonParser,function(req, res) {
-            var query={ib:req.body.ib};
+            var query={no:req.body.no};
             Board.find(query, function(err, board) {
                 for (var i = 0; i < board.length; i++) {
                     var obj = JSON.stringify(board[i]);
@@ -137,7 +133,7 @@ module.exports = function(app,io) {
                         io.emit("Remove edge", {});
                         idea.edge.splice(idea.edge.indexOf(req.body.to), 1);
                     }
-                    // var update = {content: idea.content, ib: idea.ib, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge, isdel: idea.isdel, rating: idea.rating}
+                    // var update = {content: idea.content, no: idea.no, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge, isdel: idea.isdel, rating: idea.rating}
                     Board.findOneAndUpdate(query,idea, function(err, board2) {
                         if (err) throw err;
                         //res.send('Success');
@@ -171,7 +167,7 @@ module.exports = function(app,io) {
     var jsonParser =bodyParser.json();
     app.post('/api/findEdge', jsonParser,function(req, res) {
 
-        Board.find({ib: req.body.ib}, function(err, board) {
+        Board.find({no: req.body.no}, function(err, board) {
             if (err) throw err;
             for (i = 0; i < board.length; i++) {
                 var obj = JSON.stringify(board[i]);
@@ -188,18 +184,15 @@ module.exports = function(app,io) {
      * 내용을 응답에 대해서 전부 가져오는 소스
      */
     app.get('/popup', function(req, res) {
-        Reply.find({ib:req.query.ib}, function(err, board) {
+        Reply.find({no:req.query.no}, function(err, board) {
             if (err) throw err;
             res.render('popup', { board:board});
         });
     });
 
 
-    /**
-     * 응답에 대한 popup창
-     */
     app.get('/reply', function(req, res) {
-        res.render('reply', {ib:req.query.ib});
+        res.render('reply', {no:req.query.no});
     });
 
 
@@ -208,7 +201,7 @@ module.exports = function(app,io) {
      */
     app.delete('/api/board', function(req, res) {
 
-        Board.findByIdAndRemove(req.body.ib, function(err) {
+        Board.findByIdAndRemove(req.body.no, function(err) {
             if (err) throw err;
             res.send('Success');
         })

@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var replySchema = new Schema({
-    ib : String,
+    no : String,
     reply : String,
     rating : String
 });

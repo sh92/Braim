@@ -22,6 +22,11 @@ body{
 
 }
 
+.agile_board{
+    width: 333px;
+    height: 100%;
+    float: left;
+}
 
 #keyword_input{
     top:70%;

@@ -5,30 +5,24 @@
  * 다이얼로그가 생성되도록 해놓음. 추후 css조작을 통해서 이를 해결 예정.
  ******************************************************************/
 var socket = io();
-
-/******************************************************************
- * 아이디어를 차례대로 중복없이 가져오기 위해 사용
- ******************************************************************/
-var maxib=0;
+var maxIdeaNum=0;
 var from=0;
 var to=[];
 
-function isMaxIb(ib) {
+function isMaxNo(no) {
 
-    if (ib > maxib) {
-        maxib = ib;
+    if (no > maxIdeaNum) {
+        maxIdeaNum = no;
         return true;
     }
     return false;
 }
 
 
-// idea class array
 var ideaObjects = [];
 
-// idea class
 function ideaClass(idea){
-        this.ib = idea.ib;
+        this.no = idea.no;
         this.color = idea.color;
         this.x = idea.x;
         this.y = idea.y;
@@ -39,9 +33,9 @@ function ideaClass(idea){
         this.content = idea.content;
 }
 
-function findIdeaByIb(ibNumber){
+function findIdeaByNo(ideaNo){
     for(var i=0; i<ideaObjects.length; i++){
-        if(ideaObjects[i].ib == ibNumber)
+        if(ideaObjects[i].no == ideaNo)
             return ideaObjects[i];
     }
 }
@@ -67,14 +61,12 @@ function fun_in_dial() {
         var obj = $('#anchor').find('#card_dial').offset();
         var content = $('#card_dial input').val();
 
-        //인풋의 내용을 key_content에 저장한다.
         x = obj.left+80;
         y = obj.top+50;
         //좌표의 중간 위치를 계산
         var cnt=0;
         var edge = [];
-        //socket으로 card를 생성할 것을 요청
-        socket.emit('request create card',content,maxib,color,x,y,cnt,edge);
+        socket.emit('request create card',content,maxIdeaNum,color,x,y,cnt,edge);
     });
 
     /******************************************************************
@@ -102,15 +94,15 @@ function fun_in_dial() {
     });
 }
 
-function reply(e,ib) {
-    var popUrl = "reply?ib="+ib+"";	//팝업창에 출력될 페이지 URL
+function reply(e,no) {
+    var popUrl = "reply?no="+no+"";	//팝업창에 출력될 페이지 URL
     var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
     window.open(popUrl,"",popOption);
     e.stopPropagation();
 }
 
-function popupOpen(e,ib){
-    var popUrl = "popup?ib="+ib+"";	//팝업창에 출력될 페이지 URL
+function popupOpen(e,no){
+    var popUrl = "popup?no="+no+"";	//팝업창에 출력될 페이지 URL
     var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
     window.open(popUrl,"",popOption);
     e.stopPropagation();
@@ -128,7 +120,7 @@ function contains(array, obj) {
 }
 
 function moveXY(card,idea) {
-    idea = findIdeaByIb(idea.ib);
+    idea = findIdeaByNo(idea.no);
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
@@ -153,25 +145,25 @@ function create_card(ideaData){
     var idea = ideaObjects[len-1];
 
     remove_dial();
-    $('#board_wrapper').append('<div  class="ideacard" id="'+idea.ib+'">' +
-                '<div class="dragboard" id="d'+idea.ib+'"></div>' +
+    $('#board_wrapper').append('<div  class="ideacard" id="'+idea.no+'">' +
+                '<div class="dragboard" id="d'+idea.no+'"></div>' +
                 '<div class="marker"></div>' +
-                '<a class="close" id="close'+idea.ib+'" href="#">X</a>'+
-                '<h1>'+idea.ib+': '+idea.content+'</h1>' +
+                '<a class="close" id="close'+idea.no+'" href="#">X</a>'+
+                '<h1>'+idea.no+': '+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
-                    '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.ib+')"/>' +
-                    '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.ib+')"/>' +
-                    '<h3 id="rating'+idea.ib+'" class="rating inline-block" >'+idea.rating+'</h3>' +
+                    '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.no+')"/>' +
+                    '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.no+')"/>' +
+                    '<h3 id="rating'+idea.no+'" class="rating inline-block" >'+idea.rating+'</h3>' +
                 '</div>' +
             '</div>');
     $(".ideacard").draggable({handle: ".dragboard"});
 
-    $('#board_wrapper').find('#'+idea.ib+' .marker').css('background',idea.color);
-    $('#board_wrapper').find('#d'+idea.ib+'').mouseup(function() {
+    $('#board_wrapper').find('#'+idea.no+' .marker').css('background',idea.color);
+    $('#board_wrapper').find('#d'+idea.no+'').mouseup(function() {
         moveXY(this.parentNode,idea);
     });
-    $('#board_wrapper').find('#close'+idea.ib+'').click(function() {
-        removeIdea(findIdeaByIb(idea.ib));
+    $('#board_wrapper').find('#close'+idea.no+'').click(function() {
+        removeIdea(findIdeaByNo(idea.no));
         event.stopPropagation();
     });
     place_card(idea);
@@ -185,10 +177,10 @@ function create_card(ideaData){
  * 아직 미구현.
  ******************************************************************/
 function place_card(idea){
-    idea = findIdeaByIb(idea.ib);
-    $('#board_wrapper').find('#'+idea.ib+'').css('left',idea.x);
-    $('#board_wrapper').find('#'+idea.ib+'').css('top',idea.y);
-    $('#board_wrapper').find('#'+idea.ib+'').click(function(){
+    idea = findIdeaByNo(idea.no);
+    $('#board_wrapper').find('#'+idea.no+'').css('left',idea.x);
+    $('#board_wrapper').find('#'+idea.no+'').css('top',idea.y);
+    $('#board_wrapper').find('#'+idea.no+'').click(function(){
         if(from==0) {
 
             $(this).toggleClass('selected');
@@ -235,8 +227,8 @@ function place_card(idea){
     });
 }
 
-function findEdge(ib){
-    socket.emit("request find edge", ib);
+function findEdge(no){
+    socket.emit("request find edge", no);
 }
 function applyEdge(appliedTo, how) {
     if(from==0){
@@ -246,7 +238,7 @@ function applyEdge(appliedTo, how) {
     }
 }
 function showEdge(){
-    if(maxib>1){
+    if(maxIdeaNum>1){
         socket.emit("request showEdge");
     }
 }
@@ -254,24 +246,24 @@ function showEdge(){
 function removeEdge() {
     $('#board_wrapper').find(".edgeGroup").remove();
 }
-function removeEdgeIB(ib) {
-    $('#board_wrapper').find(".edgeClass"+ib+"").remove();
+function removeEdgeNo(no) {
+    $('#board_wrapper').find(".edgeClass"+no+"").remove();
 }
 
 function createEdge(idea) {
-    removeEdgeIB(idea.ib);
+    removeEdgeNo(idea.no);
     if (idea.edge != null) {
         for (var i = 0; i < idea.edge.length; i++) {
 
-            var isAlredy = document.getElementById("'" + idea.edge[i] + 'edgeTo' + idea.ib + "'");
+            var isAlredy = document.getElementById("'" + idea.edge[i] + 'edgeTo' + idea.no + "'");
             if (isAlredy !== "undefined") {
-                $("#" + idea.edge[i] + 'edgeTo' + idea.ib).remove();
+                $("#" + idea.edge[i] + 'edgeTo' + idea.no).remove();
             }
 
 
-            $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup edgeClass' + idea.ib + '" id="' + idea.edge[i] + 'edgeTo' + idea.ib + '"></canvas>');
+            $('#board_wrapper').append('<canvas  width="1000" height="800" class="edgeGroup edgeClass' + idea.no + '" id="' + idea.edge[i] + 'edgeTo' + idea.no + '"></canvas>');
 
-            $("#" + idea.edge[i] + 'edgeTo' + idea.ib).css('position', 'absolute');
+            $("#" + idea.edge[i] + 'edgeTo' + idea.no).css('position', 'absolute');
             x = $('#board_wrapper').find('#' + idea.edge[i]).offset().left;
             y = $('#board_wrapper').find('#' + idea.edge[i]).offset().top
 
@@ -281,7 +273,7 @@ function createEdge(idea) {
             toX = parseInt(x);
             toY = parseInt(y);
 
-            var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.ib)[0];
+            var canvas = $("#" + idea.edge[i] + 'edgeTo' + idea.no)[0];
             var ctx = canvas.getContext('2d');
             if (fromX < toX && fromY < toY) { // from이 왼쪽 위에 있을 때
                 ArrowLineFunction(fromX + 160, fromY - 8, toX, toY - 80, ctx);
@@ -308,7 +300,6 @@ function ArrowLineFunction(fromX,fromY,toX,toY,context) {
     }
     Line.prototype.drawWithArrowheads=function(ctx){
 
-        // arbitrary styling
         ctx.strokeStyle="yellow";
         ctx.fillStyle="yellow";
         ctx.lineWidth=1;
@@ -350,7 +341,7 @@ function ArrowLineFunction(fromX,fromY,toX,toY,context) {
 }
 function ideaUpdate(idea) {
 
-    tempIdea = findIdeaByIb(idea.ib);
+    tempIdea = findIdeaByNo(idea.no);
     tempIdea.edge  = idea.edge;
 
 
@@ -376,12 +367,12 @@ $(document).ready(function () {
 
     socket.on('remove idea',function(idea){
         ideaUpdate(idea);
-        $('#'+idea.ib+'').remove();
+        $('#'+idea.no+'').remove();
     });
 
     socket.on('update XY',function(idea){
         ideaUpdate(idea);
-        $('#'+idea.ib+'').css({top: idea.y, left: idea.x});
+        $('#'+idea.no+'').css({top: idea.y, left: idea.x});
         showEdge();
     });
     
@@ -401,14 +392,13 @@ $(document).ready(function () {
 
     socket.on('update reply board',function(idea){
         ideaUpdate(idea);
-        $('#'+idea.ib+'').find('#rating'+idea.ib+'').text(idea.rating);
+        $('#'+idea.no+'').find('#rating'+idea.no+'').text(idea.rating);
     });
 
     socket.on('card created',function(idea){
-        // 이미 만들어진 카드는 만들지 않기 위해 isMaxIb를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
-        if(isMaxIb(idea.ib)) {
+        // 이미 만들어진 카드는 만들지 않기 위해 isMaxNo를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
+        if(isMaxNo(idea.no)) {
             create_card(idea);
-            // $('#'+idea.ib+'').find('#cnt'+idea.ib+'').text(idea.rating);
         }
     });
 
