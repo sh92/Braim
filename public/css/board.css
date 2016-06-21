@@ -180,13 +180,16 @@ body{
 
 #chat_wrapper{
     width: 285px;
+    height: 1000px;
     position: relative;
+    border-right: 1px solid black;
     float: left;
     left: 15px;
 }
 
 #chat_list{
-
+    height: 890px;
+    overflow: auto;
 }
 
 #chat_list .user_name{
@@ -211,10 +214,6 @@ body{
     height:20px;
     background: #a6e1ec;
     word-break:break-all;
-}
-
-#chat_input{
-
 }
 
 #chat_intput input#chat_msg{
