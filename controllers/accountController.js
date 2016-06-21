@@ -4,6 +4,7 @@
 var Account = require('../model/account_model')
   , passport = require("passport");
 
+
 module.exports = function(app) {
     app.get('/', function(req, res) {
         res.render('index', { User : req.user});
