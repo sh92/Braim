@@ -11,12 +11,13 @@ body{
 }
 
 #board_wrapper{
-    height:770px;
+    height:1000px;
     width:1000px;
     float:left;
     /*background-color:#485c6e;*/
-    background-image: url("../img/scrum.png");
+    background-image: url("../img/braim.png");
     background-size:1000px;
+    background-repeat: no-repeat;
     z-index: -1;
 }
 
@@ -275,7 +276,8 @@ body{
 }
 #Thema_list ul li a img{
     display: inline-block;
-    width: 180px;
+    width: 120px;
+    height: 100px;
 }
 #side_menu ul li{
     list-style: none;

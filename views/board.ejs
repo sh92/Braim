@@ -52,12 +52,15 @@
         function background_chagne(no) {
             switch(no) {
                 case 1:
-                    $('#board_wrapper').css("background-image", "url('assets/img/scrum.png')");
+                    $('#board_wrapper').css("background-image", "url('assets/img/braim.png')");
                     break;
                 case 2:
-                    $('#board_wrapper').css("background-image", "url('assets/img/bucket.png')");
+                    $('#board_wrapper').css("background-image", "url('assets/img/scrum.png')");
                     break;
                 case 3:
+                    $('#board_wrapper').css("background-image", "url('assets/img/bucket.png')");
+                    break;
+                case 4:
                     $('#board_wrapper').css("background-image", "url('assets/img/retrospect.png')");
                     break;
 
@@ -108,20 +111,26 @@
         <div id="Thema_list">
             <ul>
                 <li>
-                    <h3 class="Thema_title">Scrum</h3>
+                    <h3 class="Thema_title">Braim</h3>
                     <a href="javascript:background_chagne(1)">
+                        <img src="assets/img/braim.png">
+                    </a>
+                </li>
+                <li>
+                    <h3 class="Thema_title">Scrum</h3>
+                    <a href="javascript:background_chagne(2)">
                         <img src="assets/img/scrum.png">
                     </a>
                 </li>
                 <li>
                     <h3 class="Thema_title">Bucket List</h3>
-                    <a href="javascript:background_chagne(2)">
+                    <a href="javascript:background_chagne(3)">
                         <img src="assets/img/bucket.png">
                     </a>
                 </li>
                 <li>
                     <h3 class="Thema_title">Retrospect</h3>
-                    <a href="javascript:background_chagne(3)">
+                    <a href="javascript:background_chagne(4)">
                         <img src="assets/img/retrospect.png">
                     </a>
                 </li>
