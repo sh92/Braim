@@ -11,7 +11,6 @@ mongoose.connect('mongodb://localhost/ideadb');
 //mongoose.connect(config.getDbConnectionString())
 
 //controller 선언
-var htmlController = require('./controllers/htmlController');
 var addCardController = require('./controllers/addCardController');
 var boardController = require('./controllers/boardController');
 var accountController = require('./controllers/accountController');
@@ -40,7 +39,6 @@ app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 //controller 사용
-htmlController(app);
 accountController(app);
 
 http = require("http").createServer(app);

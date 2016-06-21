@@ -343,8 +343,25 @@ function ideaUpdate(idea) {
 
     tempIdea = findIdeaByNo(idea.no);
     tempIdea.edge  = idea.edge;
+}
+function client_background_change(no) {
+    switch(no) {
+        case 1:
+            $('#board_wrapper').css("background-image", "url('assets/img/braim.png')");
+            break;
+        case 2:
+            $('#board_wrapper').css("background-image", "url('assets/img/scrum.png')");
+            break;
+        case 3:
+            $('#board_wrapper').css("background-image", "url('assets/img/bucket.png')");
+            break;
+        case 4:
+            $('#board_wrapper').css("background-image", "url('assets/img/retrospect.png')");
+            break;
 
-
+        default:
+            $('#board_wrapper').css("background-image", "url('../img/braim.png')");
+    }
 }
 $(document).ready(function () {
     /**************************************************************
@@ -401,6 +418,10 @@ $(document).ready(function () {
         if(isMaxNo(idea.no)) {
             create_card(idea);
         }
+    });
+    socket.on('background changed',function(no){
+        // 이미 만들어진 카드는 만들지 않기 위해 isMaxNo를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
+        client_background_change(no);
     });
 
 });

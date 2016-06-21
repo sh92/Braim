@@ -7,6 +7,14 @@ module.exports = function(app,io) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
+    var turnQueue=[]
+    app.get('/board', function(req, res) {
+        if(turnQueue.indexOf(req.user)!=-1){
+            turnQueue.push(req.user);
+        }
+        res.render('board', { User : req.user});
+    });
+
 
     app.get('/load', function(req, res) {
         Board.find({isdel:false}, function(err, board) {

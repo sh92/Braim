@@ -111,5 +111,8 @@ module.exports = function(app,io) {
         socket.on('request showEdge', function (no,edge) {
             show_Edge();
         });
+        socket.on('background_change', function (no) {
+            io.emit("background changed",no);
+        })
     });
 }
