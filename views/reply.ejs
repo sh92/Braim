@@ -9,9 +9,6 @@
 <h2><%=no%>번 아이디어 의견 쓰기</h2>
 <div id="idea_reply"></div>
 <script>
-    /**
-     * Demo in action!
-     */
     (function() {
 
         'use strict';
@@ -27,12 +24,11 @@
         // INITIALIZE
         (function init() {
             for (var i = 0; i < data.length; i++) {
-                addRatingWidget(buildShopItem(data[i]), data[i]);
+                addRatingWidget(addReplyAboutBoard(data[i]), data[i]);
             }
         })();
 
-        // BUILD SHOP ITEM
-        function buildShopItem(data) {
+        function addReplyAboutBoard(data) {
             var replyItem = document.createElement('div');
 
             var html = '<form name="reply_form" action="/api/reply" method="post">' +

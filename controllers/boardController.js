@@ -133,10 +133,8 @@ module.exports = function(app,io) {
                         io.emit("Remove edge", {});
                         idea.edge.splice(idea.edge.indexOf(req.body.to), 1);
                     }
-                    // var update = {content: idea.content, no: idea.no, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge, isdel: idea.isdel, rating: idea.rating}
                     Board.findOneAndUpdate(query,idea, function(err, board2) {
                         if (err) throw err;
-                        //res.send('Success');
                         io.emit("Apply Edge Success", idea);
                     });
                 }
@@ -176,9 +174,6 @@ module.exports = function(app,io) {
             }
         });
     });
-
-
-
 
     /**
      * 내용을 응답에 대해서 전부 가져오는 소스

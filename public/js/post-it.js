@@ -390,6 +390,7 @@ $(document).ready(function () {
         createEdge(idea);
     });
 
+
     socket.on('update reply board',function(idea){
         ideaUpdate(idea);
         $('#'+idea.no+'').find('#rating'+idea.no+'').text(idea.rating);

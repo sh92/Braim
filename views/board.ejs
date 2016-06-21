@@ -25,6 +25,47 @@
             });
         }
 	</script>
+    <script>
+        function menu_change(no) {
+            switch(no) {
+                case 1:
+                    $("#menu1").addClass("menu_on");
+                    $("#menu2").removeClass("menu_on");
+                    $("#chatting").css('display',"inline");
+                    $("#Thema_list").css('display',"none");
+                    break;
+                case 2:
+                    $("#menu1").removeClass("menu_on");
+                    $("#menu2").addClass("menu_on");
+                    $("#chatting").css('display',"none");
+                    $("#Thema_list").css('display',"inline");
+                    break;
+                case 3:
+                    break;
+                default:
+                    $("#chatting").css('display',"inline");
+                    $("#Thema_list").css('display',"none");
+            }
+        }
+    </script>
+    <script>
+        function background_chagne(no) {
+            switch(no) {
+                case 1:
+                    $('#board_wrapper').css("background-image", "url('assets/img/scrum.png')");
+                    break;
+                case 2:
+                    $('#board_wrapper').css("background-image", "url('assets/img/bucket.png')");
+                    break;
+                case 3:
+                    $('#board_wrapper').css("background-image", "url('assets/img/retrospect.png')");
+                    break;
+
+                default:
+                    $('#board_wrapper').css("background-image", "url('assets/img/scrum.png')");
+            }
+        }
+    </script>
     <script src="assets/js/post-it.js"></script>
 </head>
 <body onload="loadDB()">
@@ -33,8 +74,8 @@
 <nav>
     <span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.
     <br>
-    <div class="inline-block">선택한 시작 지점 :<p id="from" class="inline-block"></p></div>
-    <div class="inline-block" id="endText">선택한 도착 지점 :<p id="to" class="inline-block"></p></div>
+    <!--<div class="inline-block">선택한 시작 지점 :<p id="from" class="inline-block"></p></div>-->
+    <!--<div class="inline-block" id="endText">선택한 도착 지점 :<p id="to" class="inline-block"></p></div>-->
 </nav>
 <div id="wrapper">
     <div id="anchor"></div>
@@ -46,12 +87,53 @@
         </div>
     </div>
     <div id="chat_wrapper">
-        <div id="chat_list">
+        <div id="side_menu">
+            <ul>
+                <li>
+                    <a id="menu1" href="javascript:menu_change(1)">
+                        <p>Chatting</p>
+                    </a>
+                </li>
+                <li>
+                    <a id="menu2" href="javascript:menu_change(2)">
+                        <p>
+                            Thema
+                        </p>
+                    </a>
+                </li>
+
+            </ul>
         </div>
-        <form action="">
-            <input id="m"/>
-            <button id="send_msg">send</button>
-        </form>
+
+        <div id="Thema_list">
+            <ul>
+                <li>
+                    <h3 class="Thema_title">Scrum</h3>
+                    <a href="javascript:background_chagne(1)">
+                        <img src="assets/img/scrum.png">
+                    </a>
+                </li>
+                <li>
+                    <h3 class="Thema_title">Bucket List</h3>
+                    <a href="javascript:background_chagne(2)">
+                        <img src="assets/img/bucket.png">
+                    </a>
+                </li>
+                <li>
+                    <h3 class="Thema_title">Retrospect</h3>
+                    <a href="javascript:background_chagne(3)">
+                        <img src="assets/img/retrospect.png">
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div id="chatting">
+            <div id="chat_list"></div>
+            <form action="">
+                <input id="m"/>
+                <button id="send_msg">send</button>
+            </form>
+        </div>
 		<script>
 		      var socket = io();
 	            $('form').submit(function(){

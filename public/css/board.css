@@ -11,10 +11,12 @@ body{
 }
 
 #board_wrapper{
-    height:1000px;
+    height:770px;
     width:1000px;
     float:left;
-    background-color:#485c6e;
+    /*background-color:#485c6e;*/
+    background-image: url("../img/scrum.png");
+    background-size:1000px;
     z-index: -1;
 }
 
@@ -174,6 +176,7 @@ body{
     color:white;
 }
 
+
 #chat_wrapper{
     width: 300px;
     left: 30px;
@@ -253,4 +256,44 @@ body{
     color: black;
     font-size:13px;
     z-index: 5;
+}
+#Thema_list{
+    display: none;
+}
+#Thema_list ul li{
+    list-style: none;
+    display: inline-block;
+}
+#Thema_list ul{
+    padding:0px;
+}
+#Thema_list ul li a{
+    display: inline-block;
+    border: 0.5px solid;
+    padding: 5px;
+    margin: 2px;
+}
+#Thema_list ul li a img{
+    display: inline-block;
+    width: 180px;
+}
+#side_menu ul li{
+    list-style: none;
+    display: inline-block;
+}
+.Thema_title{
+    text-align: center;
+    text-decoration: none;
+}
+
+#side_menu ul li a{
+    display: inline-block;
+    margin-right: 20px;
+    text-decoration: none;
+}
+#side_menu .menu_on{
+    border-bottom: purple 5.5px solid;
+}
+#side_menu ul{
+    padding-left: 20px;
 }
