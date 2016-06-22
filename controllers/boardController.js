@@ -1,5 +1,6 @@
 var Board = require('../model/board_model');
 var Reply = require('../model/reply_model');
+var Account = require('../model/account_model');
 var bodyParser = require('body-parser');
 
 module.exports = function(app,io) {
@@ -7,39 +8,6 @@ module.exports = function(app,io) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
 
-    var turnQueue=[]
-    app.get('/board', function(req, res) {
-        if(turnQueue.indexOf(req.user)!=-1){
-            turnQueue.push(req.user);
-        }
-        res.render('board', { User : req.user});
-    });
-
-
-    app.get('/load', function(req, res) {
-        Board.find({isdel:false}, function(err, board) {
-            if (err) throw err;
-            for (i = 0; i < board.length; i++) {
-                var obj = JSON.stringify(board[i]);
-                var idea = JSON.parse(obj);
-                io.emit('card created', idea);
-            }
-        });
-    });
-
-    /**
-     * 내용을 전부 가져오는 소스
-     */
-    app.post('/load', function(req, res) {
-        Board.find({isdel:false}, function(err, board) {
-            if (err) throw err;
-            for (i = 0; i < board.length; i++) {
-                var obj = JSON.stringify(board[i]);
-                var idea = JSON.parse(obj);
-                io.emit('card created', idea);
-            }
-        });
-    });
 
     /**
      * Ajax로 json형태로 값을 받는데, 동일한 no에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
@@ -47,14 +15,34 @@ module.exports = function(app,io) {
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
         var query={no:req.body.no};
-        Board.findOne({ no: req.body.no}, function (err, findedboard){
+        Board.findOne(query, function (err, findedboard){
             if (err) throw err;
             function shouldUpdate() {
+                console.log(findedboard);
                 return findedboard != null;
             }
 
+            function addNumIdeaCount(num) {
+                var query2 = {username: req.body.user};
+                Account.findOne(query2, function (err, myaccount) {
+                    if (err) throw err;
+                    if (myaccount != null) {
+                        var count = parseInt(myaccount.IdeaCount)+num;
+                        var update2 = {username:req.body.user,IdeaCount: count}
+                        Account.findOneAndUpdate(query2, update2, function (err, myaccount2) {
+                            if (err) throw err;
+                            io.emit('update IdeaCount', update2);
+                        });
+
+                    }
+                });
+            }
+
             if (shouldUpdate()) {
-                var update = {content: req.body.content, no: req.body.no, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel, rating: req.body.rating}
+                var update = {content: req.body.content, no: req.body.no, color:req.body.color,x:req.body.x, y:req.body.y, cnt:req.body.cnt,edge:req.body.edge,isdel:req.body.isdel, rating: req.body.rating, user: req.body.user};
+                if(req.body.isdel==true){
+                    addNumIdeaCount(-1);
+                }
                 Board.findOneAndUpdate(query,update, function(err, board) {
                     if (err) throw err;
                     if(req.body.how =="moveXY") {
@@ -62,7 +50,7 @@ module.exports = function(app,io) {
                     }
                 });
             } else {
-
+                addNumIdeaCount(1);
                 var newBoard = Board({
                     content: req.body.content,
                     no: req.body.no,
@@ -72,13 +60,13 @@ module.exports = function(app,io) {
                     cnt: req.body.cnt,
                     edge: req.body.edge,
                     isdel:req.body.isdel,
-                    rating: req.body.rating
+                    rating: req.body.rating,
+                    user: req.body.user
                 });
                 newBoard.save(function(err) {
                     if (err) throw err;
                     //res.send('Success');
                 });
-
             }
         });
 
@@ -93,13 +81,14 @@ module.exports = function(app,io) {
         var newReply = Reply({
             no: req.body.no,
             reply: req.body.reply,
-            rating: req.body.rating
+            rating: req.body.rating,
+            user: req.body.user
         });
         newReply.save(function(err) {
             if (err) throw err;
         });
 
-        var update ={no: req.body.no, rating:req.body.rating};
+        var update ={no: req.body.no, rating:req.body.rating, user:req.body.user};
         var query={no:req.body.no};
         Board.find(query, function(err, board) {
             if (err) throw err;
@@ -114,7 +103,7 @@ module.exports = function(app,io) {
                 idea.rating = Math.floor((old +newRating)*10 /(newCnt)) / 10 + 0.0;
                 idea.cnt = newCnt;
 
-                var update = {content: idea.content, no: idea.no, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating}
+                var update = {content: idea.content, no: idea.no, color: idea.color,x:idea.x, y:idea.y, cnt:idea.cnt,edge : idea.edge,isdel: idea.isdel, rating: idea.rating, user: idea.user};
                 Board.findOneAndUpdate(query,update, function(err, board2) {
                     if (err) throw err;
                     io.emit("update reply board", update);

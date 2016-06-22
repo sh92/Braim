@@ -11,7 +11,8 @@ var boardSchema = new Schema({
     cnt : String,
     edge : [String],
     isdel : Boolean,
-    rating : String
+    rating : String,
+    user : String
 });
 
 var Board = mongoose.model('Board', boardSchema);

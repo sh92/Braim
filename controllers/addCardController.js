@@ -1,7 +1,76 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var Board = require('../model/board_model');
+var Account = require('../model/account_model');
 
 module.exports = function(app,io) {
+    /******************************************************************
+     * board Loading 하기 위한 페이지
+     *******************************************************************/
+    var backgroundNo=1;
+    var userQueue=[];
+    function not_contain(a, obj) {
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] === obj) {
+                return false;
+            }
+        }
+        return true;
+    }
+    app.get('/board', function(req, res) {
+        if(typeof req.user !='undefined'){
+            if(not_contain(userQueue,req.user.username)){
+                userQueue.push(req.user.username);
+            }
+        }
+        res.render('board', { User : req.user, UserList: userQueue});
+
+    });
+
+    /**
+     * 내용을 전부 가져오는 소스
+     */
+
+    app.get('/load', function(req, res) {
+        Board.find({isdel:false}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                io.emit('card created', idea);
+
+            }
+            io.emit("background changed",backgroundNo);
+
+        });
+
+    });
+
+
+    app.post('/load', function(req, res) {
+        Board.find({isdel:false}, function(err, board) {
+            if (err) throw err;
+            for (i = 0; i < board.length; i++) {
+                var obj = JSON.stringify(board[i]);
+                var idea = JSON.parse(obj);
+                io.emit('card created', idea);
+            }
+            io.emit("background changed",backgroundNo);
+
+        });
+        Account.find({},function (err,account) {
+            if (err) throw err;
+            for (i = 0; i < account.length; i++) {
+                var obj = JSON.stringify(account[i]);
+                var userAccount = JSON.parse(obj);
+                io.emit('show IdeaCount', userAccount);
+            }
+        });
+    });
+
+    /******************************************************************
+     * DB에 저장
+     *******************************************************************/
+
     function save_db(idea,how) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'http://localhost:3001/api/board');
@@ -16,6 +85,7 @@ module.exports = function(app,io) {
             edge: idea.edge,
             isdel : idea.isdel,
             rating : idea.rating,
+            user : idea.user,
             how : how
         }));
     }
@@ -56,6 +126,7 @@ module.exports = function(app,io) {
     }
 
 
+
     /******************************************************************
      * Socket 통신
      *******************************************************************/
@@ -67,7 +138,7 @@ module.exports = function(app,io) {
             io.emit('receive msg', msg);
         });
 
-        socket.on('request create card', function (content,no,color,x,y,cnt,edge,rating) {
+        socket.on('request create card', function (content,no,color,x,y,cnt,edge,user) {
             var idea = Board({
                 content: content,
                 no: no,
@@ -77,7 +148,8 @@ module.exports = function(app,io) {
                 cnt: cnt,
                 edge: edge,
                 isdel : false,
-                rating : "0.0"
+                rating : "0.0",
+                user : user
             });
             idea.no++;
             create_card(idea);
@@ -112,7 +184,8 @@ module.exports = function(app,io) {
             show_Edge();
         });
         socket.on('background_change', function (no) {
-            io.emit("background changed",no);
-        })
+            backgroundNo=no;
+            io.emit("background changed",backgroundNo);
+        });
     });
 }

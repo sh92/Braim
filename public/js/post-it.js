@@ -8,6 +8,7 @@ var socket = io();
 var maxIdeaNum=0;
 var from=0;
 var to=[];
+var userlistforCount=[];
 
 function isMaxNo(no) {
 
@@ -20,7 +21,6 @@ function isMaxNo(no) {
 
 
 var ideaObjects = [];
-
 function ideaClass(idea){
         this.no = idea.no;
         this.color = idea.color;
@@ -31,6 +31,7 @@ function ideaClass(idea){
         this.isdel = idea.isdel;
         this.rating = idea.rating;
         this.content = idea.content;
+        this.user = idea.user;
 }
 
 function findIdeaByNo(ideaNo){
@@ -66,7 +67,7 @@ function fun_in_dial() {
         //좌표의 중간 위치를 계산
         var cnt=0;
         var edge = [];
-        socket.emit('request create card',content,maxIdeaNum,color,x,y,cnt,edge);
+        create_card_db(content,maxIdeaNum,color,x,y,cnt,edge);
     });
 
     /******************************************************************
@@ -78,7 +79,6 @@ function fun_in_dial() {
     });
     $('#anchor').find('#c1').click(function () {
         color= '#d12823';
-
     });
     $('#anchor').find('#c2').click(function () {
         color= '#d18623';
@@ -149,7 +149,7 @@ function create_card(ideaData){
                 '<div class="dragboard" id="d'+idea.no+'"></div>' +
                 '<div class="marker"></div>' +
                 '<a class="close" id="close'+idea.no+'" href="#">X</a>'+
-                '<h1>'+idea.no+': '+idea.content+'</h1>' +
+                '<h1>'+idea.user+': '+idea.content+'</h1>' +
                 '<div class="bottom_idea">' +
                     '<input class="inline-block" type="button" value="의견입력" onclick="reply(event,'+idea.no+')"/>' +
                     '<input class="inline-block" type="button" value="의견보기" onclick="popupOpen(event,'+idea.no+')"/>' +
@@ -182,30 +182,24 @@ function place_card(idea){
     $('#board_wrapper').find('#'+idea.no+'').css('top',idea.y);
     $('#board_wrapper').find('#'+idea.no+'').click(function(){
         if(from==0) {
-
             $(this).toggleClass('selected');
             from = this.id;
             findEdge(from);
-            $("#from").text(from);
-            alert("시작 지점 선택 : "+from);
+            alert("카드를 선택하셨습니다! 연결할 카드를 선택하세요");
             event.stopPropagation();
         }else{
 
             if(from==this.id){
                 $(this).toggleClass('selected');
-                alert("시작 지점 취소 : "+this.id);
+                alert("카드 선택 취소!")
                 from=0;
                 to = [];
-                $("#from").text("지정 안됨");
-                $("#to").text("지정 안됨");
-                
             }else{
                 if(contains(to,this.id)){
                      var done = confirm("연결 해제 하시겠습니까?");
                      if(done) {
-                        alert("도착 지점 취소 : " + this.id);
+                         alert("연결을 해제 하였습니다");
                         to.splice($.inArray(this.id, to), 1);
-                        $("#to").text(to);
                          applyEdge(this.id,"cancel");
 
                      }
@@ -213,8 +207,9 @@ function place_card(idea){
                      var done = confirm("연결 하시겠습니까?");
                      if(done){
                          to.push(this.id);
-                         alert("도착 지점 선택 : "+to);
-                        $("#to").text(to);
+                         // alert("도착 지점 선택 : "+to);
+                         alert("연결할 카드를 선택하셨습니다.");
+                        // $("#to").text(to);
                          applyEdge(this.id,"add");
 
                      }
@@ -360,7 +355,7 @@ function client_background_change(no) {
             break;
 
         default:
-            $('#board_wrapper').css("background-image", "url('../img/braim.png')");
+            $('#board_wrapper').css("background-image", "url('asserts/img/braim.png')");
     }
 }
 $(document).ready(function () {
@@ -420,8 +415,38 @@ $(document).ready(function () {
         }
     });
     socket.on('background changed',function(no){
-        // 이미 만들어진 카드는 만들지 않기 위해 isMaxNo를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
         client_background_change(no);
     });
+
+    socket.on('update IdeaCount', function(account){
+        if(contains(userlistforCount,account.username)){
+            var removeLI = document.getElementById("ideaFor"+account.username);
+            removeLI.parentNode.removeChild(removeLI);
+            var ul = document.getElementById("userIdeaCount");
+            var li = document.createElement("li");
+            li.setAttribute("id","ideaFor"+account.username);
+            var p = document.createElement("p");
+            p.textContent=account.username+":"+account.IdeaCount;
+            li.appendChild(p);
+            ul.appendChild(li);
+        }
+    });
+
+    socket.on('show IdeaCount', function(account){
+        if(contains(userlistforCount,account.username)){
+
+        }else {
+            userlistforCount.push(account.username);
+            var ul = document.getElementById("userIdeaCount");
+            var li = document.createElement("li");
+            li.setAttribute("id","ideaFor"+account.username);
+            var p = document.createElement("p");
+            p.textContent = account.username + ":" + account.IdeaCount;
+            li.appendChild(p);
+            ul.appendChild(li);
+            ul.style.visibility="hidden";
+        }
+    });
+
 
 });
