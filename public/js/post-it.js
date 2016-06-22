@@ -9,8 +9,8 @@ var userlistforCount=[];
  ******************************************************************/
 function isMaxNo(no) {
 
-    if (no > maxIdeaNum) {
-        maxIdeaNum = no;
+    if (parseInt(no) > maxIdeaNum) {
+        maxIdeaNum = parseInt(no);
         return true;
     }
     return false;

@@ -14,7 +14,6 @@ body{
     height:1000px;
     width:1000px;
     float:left;
-    /*background-color:#485c6e;*/
     background-image: url("../img/braim.png");
     background-size:1000px 1000px;
     background-repeat: no-repeat;
@@ -302,6 +301,7 @@ body{
 }
 #side_menu ul{
     padding-left: 10px;
+    margin:0px;
 }
 #userList li{
     list-style: none;
