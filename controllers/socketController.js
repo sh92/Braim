@@ -25,6 +25,7 @@ module.exports = function(app,io) {
         res.render('board', { User : req.user, UserList: userQueue});
 
     });
+    
 
     /******************************************************************
      * 페이지가 로드 될 때 정보를 가져옴

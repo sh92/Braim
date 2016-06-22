@@ -11,7 +11,7 @@ mongoose.connect('mongodb://localhost/ideadb');
 //mongoose.connect(config.getDbConnectionString())
 
 //controller 선언
-var addCardController = require('./controllers/addCardController');
+var socketController = require('./controllers/socketController');
 var boardController = require('./controllers/boardController');
 var accountController = require('./controllers/accountController');
 
@@ -44,7 +44,7 @@ accountController(app);
 http = require("http").createServer(app);
 var io = require('socket.io').listen(http);
 boardController(app,io);
-addCardController(app,io);
+socketController(app,io);
 
 
 
