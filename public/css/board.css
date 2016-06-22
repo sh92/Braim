@@ -296,5 +296,9 @@ body{
     border-bottom: purple 5.5px solid;
 }
 #side_menu ul{
-    padding-left: 20px;
+    padding-left: 10px;
+}
+#userList li{
+    list-style: none;
+    display: inline-block;
 }

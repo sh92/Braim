@@ -31,20 +31,32 @@
                 case 1:
                     $("#menu1").addClass("menu_on");
                     $("#menu2").removeClass("menu_on");
+                    $("#menu3").removeClass("menu_on");
                     $("#chatting").css('display',"inline");
                     $("#Thema_list").css('display',"none");
+                    $("#ideaCountBox").css('display',"none");
                     break;
                 case 2:
                     $("#menu1").removeClass("menu_on");
                     $("#menu2").addClass("menu_on");
+                    $("#menu3").removeClass("menu_on");
                     $("#chatting").css('display',"none");
                     $("#Thema_list").css('display',"inline");
+                    $("#ideaCountBox").css('display',"none");
                     break;
                 case 3:
+                    $("#menu1").removeClass("menu_on");
+                    $("#menu2").removeClass("menu_on");
+                    $("#menu3").addClass("menu_on");
+                    $("#chatting").css('display',"none");
+                    $("#Thema_list").css('display',"none");
+                    $("#ideaCountBox").css('display',"inline");
+                    $("#userIdeaCount").css('visibility',"visible");
                     break;
                 default:
                     $("#chatting").css('display',"inline");
                     $("#Thema_list").css('display',"none");
+                    $("#ideaCountBox").css('display',"none");
             }
         }
     </script>
@@ -52,8 +64,13 @@
         function background_change(no) {
             socket.emit("background_change",no);
         }
+        function create_card_db(content,maxIdeaNum,color,x,y,cnt,edge) {
+            var user = '<%=User.username%>';
+            socket.emit('request create card',content,maxIdeaNum,color,x,y,cnt,edge,user);
+        }
     </script>
     <script src="assets/js/post-it.js"></script>
+
 </head>
 <body onload="loadDB()">
 <form action="/load" id ="myform" method="post">
@@ -61,6 +78,16 @@
 <nav>
     <span id='id'><%=User.username%></span>님 브레인스토밍을 진행해주세요.
     <br>
+    <span id ='user'></span>
+
+    <ul id="userList">
+        <span> 접속자 :</span>
+        <% for(var i=0; i<UserList.length; i++) { %>
+        <li>
+                <%= UserList[i] %>
+        </li>
+        <% } %>
+    </ul>
     <!--<div class="inline-block">선택한 시작 지점 :<p id="from" class="inline-block"></p></div>-->
     <!--<div class="inline-block" id="endText">선택한 도착 지점 :<p id="to" class="inline-block"></p></div>-->
 </nav>
@@ -85,6 +112,13 @@
                     <a id="menu2" href="javascript:menu_change(2)">
                         <p>
                             Thema
+                        </p>
+                    </a>
+                </li>
+                <li>
+                    <a id="menu3" href="javascript:menu_change(3)">
+                        <p>
+                            IdeaCount
                         </p>
                     </a>
                 </li>
@@ -140,6 +174,11 @@
                     $('#chat_list').append($('<li>').text(txt));
                 });
         </script>
+        <div id="ideaCountBox">
+            <ul id="userIdeaCount">
+
+            </ul>
+        </div>
     </div>
 </div>
 </body>

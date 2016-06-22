@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy
+var LocalStrategy = require('passport-local').Strategy;
 
 mongoose.connect('mongodb://localhost/ideadb');
 //mongoose.connect(config.getDbConnectionString())

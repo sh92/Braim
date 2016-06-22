@@ -17,7 +17,8 @@ module.exports = function(app) {
     app.post('/register', function(req, res, next) {
         console.log('registering user');
         Account.register(new Account({
-            username: req.body.username
+            username: req.body.username,
+            IdeaCount: 0
         }), req.body.password, function(err) {
             if (err) {
                 console.log('error while user register!', err);
