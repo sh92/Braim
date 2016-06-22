@@ -71,6 +71,7 @@ function fun_in_dial() {
         var cnt=0;
         var edge = [];
         create_card_db(content,maxIdeaNum,color,x,y,cnt,edge);
+		resetTimer(timer);
     });
 
     /******************************************************************
@@ -479,3 +480,18 @@ $(document).ready(function () {
 
 
 });
+
+var timer;
+var timerInterval = 60*1000;
+
+timer = setInterval(encourageUser, timerInterval);
+
+function encourageUser() {
+	alert('떠오르는 생각을 자유롭게 등록해보세요');
+}       
+
+function resetTimer() {      
+	console.log("reset timer");     
+	clearInterval(timer);
+	timer = setInterval(encourageUser, timerInterval);
+}
