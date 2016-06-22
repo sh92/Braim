@@ -27,8 +27,9 @@ module.exports = function(app,io) {
                 Account.findOne(query2, function (err, myaccount) {
                     if (err) throw err;
                     if (myaccount != null) {
-                        var count = parseInt(myaccount.IdeaCount)+num;
+                        var count = parseInt(myaccount.IdeaCount)+parseInt(num)+"";
                         var update2 = {username:req.body.user,IdeaCount: count};
+                        console.log(update2);
                         Account.findOneAndUpdate(query2, update2, function (err, myaccount2) {
                             if (err) throw err;
                             io.emit('update IdeaCount', update2);
