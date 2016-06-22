@@ -7,12 +7,9 @@ var Account = require('../model/account_model')
 
 module.exports = function(app) {
     app.get('/', function(req, res) {
-        res.render('index', { User : req.user});
+        res.render('index', { User : req.username});
     });
 
-    app.get('/register', function(req, res) {
-        res.render('register', {});
-    });
 
     app.post('/register', function(req, res, next) {
         console.log('registering user');
@@ -26,19 +23,13 @@ module.exports = function(app) {
             }
 
             console.log('user registered!');
-
-            res.redirect('/');
+            res.render('index',{User: req.username});
         });
     });
 
-    app.get('/login', function(req, res) {
-        res.render('login', {
-            user: req.user
-        });
-    });
 
     app.post('/login', passport.authenticate('local'), function(req, res) {
-        res.redirect('/');
+        res.redirect('/board');
     });
 
     app.get('/logout', function(req, res) {

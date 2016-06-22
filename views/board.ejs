@@ -2,11 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <% if (User == null) { %>
-    <title>로그인을 먼저 하세요.</title>
-    <body>
-         로그인을 먼저 하세요.<br>
-         <a href='/login'>login</a>
-    </body>
+    <script>alert('로그인을 먼저 하세요.');location.replace('/');</script>
 </head>
 </html>
 <% } else { %>
