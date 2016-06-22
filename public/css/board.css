@@ -188,7 +188,7 @@ body{
 }
 
 #chat_list{
-    height: 890px;
+    height: 875px;
     overflow: auto;
 }
 
@@ -278,6 +278,11 @@ body{
     width: 110px;
     height: 100px;
 }
+
+#side_menu{
+    background-color: #c8c8c8;
+}
+
 #side_menu ul li{
     list-style: none;
     display: inline-block;
