@@ -367,6 +367,17 @@ function client_background_change(no) {
         case 4:
             $('#board_wrapper').css("background-image", "url('assets/img/retrospect.png')");
             break;
+        case 5:
+            $('#board_wrapper').css("background-image", "url('assets/img/retrospect2.png')");
+            break;
+
+        case 6:
+            $('#board_wrapper').css("background-image", "url('assets/img/bm-canvas.jpg')");
+            break;
+        case 6:
+            $('#board_wrapper').css("background-image", "url('assets/img/note.png')");
+            break;
+
 
         default:
             $('#board_wrapper').css("background-image", "url('asserts/img/braim.png')");
