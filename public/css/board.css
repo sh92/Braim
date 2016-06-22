@@ -82,6 +82,7 @@ body{
     padding:5px;
     position: absolute;
     z-index:3;
+    border: 1px #c4c4c4 solid;
 }
 .ideacard h1{
     font-size:14px;

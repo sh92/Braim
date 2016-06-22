@@ -374,7 +374,7 @@ function client_background_change(no) {
         case 6:
             $('#board_wrapper').css("background-image", "url('assets/img/bm-canvas.jpg')");
             break;
-        case 6:
+        case 7:
             $('#board_wrapper').css("background-image", "url('assets/img/note.png')");
             break;
 
