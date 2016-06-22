@@ -8,7 +8,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 mongoose.connect('mongodb://localhost/ideadb');
-//mongoose.connect(config.getDbConnectionString())
 
 //controller 선언
 var socketController = require('./controllers/socketController');
