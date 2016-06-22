@@ -8,6 +8,8 @@ nav {
     width: 1300px;
     height: 80px;
     background: #242424;
-    color : white;
-
+    color: white;
+    font-family: sans-serif;
+    font-size: 18px;
+    text-align: center;
 }
