@@ -178,13 +178,15 @@
 		<script>
 		      var socket = io();
 	            $('form').submit(function(){
-                    socket.emit('chat message', $('#m').val());
+                    var msg_txt = new Object();
+                    msg_txt.id = "<%=User.username%>";
+                    msg_txt.msg = $('#m').val();
+                    socket.emit('chat message', msg_txt);
                     $('#m').val('');
                     return false;
                 });
-		        socket.on('chat message', function(msg){
-                    var usr_id = "<%=User.username%>"+" : ";
-                    var txt = usr_id + msg;
+		        socket.on('chat message', function(msg_txt){
+                    txt = msg_txt.id + " : " + msg_txt.msg;
                     $('#chat_list').append($('<li>').text(txt));
                 });
         </script>
