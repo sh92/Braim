@@ -180,13 +180,16 @@ body{
 
 #chat_wrapper{
     width: 285px;
+    height: 1000px;
     position: relative;
+    border-right: 1px solid black;
     float: left;
     left: 15px;
 }
 
 #chat_list{
-
+    height: 890px;
+    overflow: auto;
 }
 
 #chat_list .user_name{
@@ -198,8 +201,8 @@ body{
 
 }
 
-#chat_list ul{
-
+#chat_list li{
+    list-style: none;
 }
 
 #chat_list ul li{
@@ -213,15 +216,11 @@ body{
     word-break:break-all;
 }
 
-#chat_input{
-
+#chatting input#m{
+    width:210px;
 }
 
-#chat_intput input#chat_msg{
-    width:340px;
-}
-
-#chat_input button#send_msg{
+#chatting button#send_msg{
     width:60px;
     background:#2a6496;
     color:white;

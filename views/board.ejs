@@ -10,7 +10,7 @@
 </head>
 </html>
 <% } else { %>
-    <title>여기에 타이틀</title>
+    <title>아이디어 보드</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/board.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
@@ -169,7 +169,9 @@
                     return false;
                 });
 		        socket.on('chat message', function(msg){
-                    $('#chat_list').append($('<li>').text(msg));
+                    var usr_id = "<%=User.username%>"+" : ";
+                    var txt = usr_id + msg;
+                    $('#chat_list').append($('<li>').text(txt));
                 });
         </script>
         <div id="ideaCountBox">
