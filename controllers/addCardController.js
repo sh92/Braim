@@ -4,7 +4,7 @@ var Account = require('../model/account_model');
 
 module.exports = function(app,io) {
     /******************************************************************
-     * board Loading 하기 위한 페이지
+     * board로 라우팅
      *******************************************************************/
     var backgroundNo=1;
     var userQueue=[];
@@ -26,9 +26,9 @@ module.exports = function(app,io) {
 
     });
 
-    /**
-     * 내용을 전부 가져오는 소스
-     */
+    /******************************************************************
+     * 페이지가 로드 될 때 정보를 가져옴
+     *******************************************************************/
 
     app.get('/load', function(req, res) {
         Board.find({isdel:false}, function(err, board) {

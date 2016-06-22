@@ -10,7 +10,7 @@ module.exports = function(app,io) {
 
 
     /**
-     * Ajax로 json형태로 값을 받는데, 동일한 no에 대한 값이 있으면 db의 값을 update를 하고, 있으면 저장을한다
+     * 해당 아이디어에 대해서 존재하면 Update 존재하지 않으면 생성을 한다
      */
     var jsonParser =bodyParser.json();
     app.post('/api/board', jsonParser,function(req, res) {
@@ -28,7 +28,7 @@ module.exports = function(app,io) {
                     if (err) throw err;
                     if (myaccount != null) {
                         var count = parseInt(myaccount.IdeaCount)+num;
-                        var update2 = {username:req.body.user,IdeaCount: count}
+                        var update2 = {username:req.body.user,IdeaCount: count};
                         Account.findOneAndUpdate(query2, update2, function (err, myaccount2) {
                             if (err) throw err;
                             io.emit('update IdeaCount', update2);
@@ -74,7 +74,7 @@ module.exports = function(app,io) {
 
 
     /**
-     * Post로 전달받은 것을 json형태로 reply를 받음
+     * 해당 아이디어에 대한 평가에 대한 내용을 가진 객체를 받아 생성을 하고 해당 아이디어 대해서 평점을 업데이트 한다
      */
     var jsonParser =bodyParser.json();
     app.post('/api/reply', jsonParser,function(req, res) {
@@ -115,7 +115,7 @@ module.exports = function(app,io) {
     });
 
     /**
-     * Ajax로 json형태로 edge 받음
+     * 아이디어간의 관계를 추가한다
      */
     var jsonParser =bodyParser.json();
         app.post('/api/edge', jsonParser,function(req, res) {
@@ -142,7 +142,7 @@ module.exports = function(app,io) {
 
 
     /**
-     * Ajax로 Edge들을 보여주기 위해 이렇게 사용
+     * 해당 아이디어간의 관계를 보여준다
      */
     var jsonParser =bodyParser.json();
     app.get('/api/showEdge', jsonParser,function(req, res) {
@@ -157,7 +157,7 @@ module.exports = function(app,io) {
     });
 
     /**
-     * from 으로 부터 to의 내용 가져옴
+     * 특정 아이디어에 대해서 연결된 관계선을 전부 가져온다.
      */
     var jsonParser =bodyParser.json();
     app.post('/api/findEdge', jsonParser,function(req, res) {
@@ -173,7 +173,7 @@ module.exports = function(app,io) {
     });
 
     /**
-     * 내용을 응답에 대해서 전부 가져오는 소스
+     * 아이디어에 대한 평가를 가져옴
      */
     app.get('/popup', function(req, res) {
         Reply.find({no:req.query.no}, function(err, board) {
@@ -183,6 +183,9 @@ module.exports = function(app,io) {
     });
 
 
+    /**
+     * 아이디어 평가에 대한 화면으로 라우팅
+     */
     app.get('/reply', function(req, res) {
         res.render('reply', {no:req.query.no});
     });

@@ -1,15 +1,12 @@
-/******************************************************************
- * post-it fucntion. j-query 2.2.1버전으로 작성됨.
- * ver0.1.1:setclick의 사용 없이 대화상자의 중복 생성을 막음.
- * ver 0.1 : 대화상자의 중복 생성을 막기 위해서 setclick이 true일 때만
- * 다이얼로그가 생성되도록 해놓음. 추후 css조작을 통해서 이를 해결 예정.
- ******************************************************************/
 var socket = io();
 var maxIdeaNum=0;
 var from=0;
 var to=[];
 var userlistforCount=[];
 
+/******************************************************************
+ * 이미 만들어진 카드는 만들지 않기 위해isMaxNo를 이용
+ ******************************************************************/
 function isMaxNo(no) {
 
     if (no > maxIdeaNum) {
@@ -19,7 +16,9 @@ function isMaxNo(no) {
     return false;
 }
 
-
+/******************************************************************
+ * 클라이언트와 서버간의 동기화
+ ******************************************************************/
 var ideaObjects = [];
 function ideaClass(idea){
         this.no = idea.no;
@@ -40,7 +39,11 @@ function findIdeaByNo(ideaNo){
             return ideaObjects[i];
     }
 }
+function ideaUpdate(idea) {
 
+    tempIdea = findIdeaByNo(idea.no);
+    tempIdea.edge  = idea.edge;
+}
 /******************************************************************
  * 다이얼로그 삭제 기능. 페이드아웃후 해당 오브젝트를 제거하도록 작동함.
  ******************************************************************/
@@ -94,6 +97,10 @@ function fun_in_dial() {
     });
 }
 
+/******************************************************************
+ * 아이디어 평가에 대한 소스
+ ******************************************************************/
+
 function reply(e,no) {
     var popUrl = "reply?no="+no+"";	//팝업창에 출력될 페이지 URL
     var popOption = "width=370, height=360, resizable=no, scrollbars=no, status=no;";    //팝업창 옵션(optoin)
@@ -119,13 +126,18 @@ function contains(array, obj) {
     return false;
 }
 
+/******************************************************************
+ * 아이디어 움직임
+ ******************************************************************/
 function moveXY(card,idea) {
     idea = findIdeaByNo(idea.no);
     idea.y  = card.style.top;
     idea.x = card.style.left;
     socket.emit('request moveXY', idea);
 }
-
+/******************************************************************
+ * 아이디어 삭제
+ ******************************************************************/
 function removeIdea(idea){
     var remove  =confirm("아이디어를 삭제하시겠습니까");
     if(remove){
@@ -138,7 +150,6 @@ function removeIdea(idea){
  * 이후에는 카드의 위치를 자동으로 배열해준다.
  ******************************************************************/
 function create_card(ideaData){
-
 
     ideaObjects.push(new ideaClass(ideaData));
     var len = ideaObjects.length;
@@ -222,6 +233,9 @@ function place_card(idea){
     });
 }
 
+/******************************************************************
+ * 아이디어간의 관계선에 대한 소스
+ ******************************************************************/
 function findEdge(no){
     socket.emit("request find edge", no);
 }
@@ -232,6 +246,7 @@ function applyEdge(appliedTo, how) {
         socket.emit("request EdgeAdd", from, appliedTo, how);
     }
 }
+
 function showEdge(){
     if(maxIdeaNum>1){
         socket.emit("request showEdge");
@@ -316,7 +331,7 @@ function ArrowLineFunction(fromX,fromY,toX,toY,context) {
         this.drawArrowhead(ctx,this.x2,this.y2,endRadians);
 
 
-    }
+    };
     Line.prototype.drawArrowhead=function(ctx,x,y,radians){
         ctx.save();
         ctx.beginPath();
@@ -328,17 +343,16 @@ function ArrowLineFunction(fromX,fromY,toX,toY,context) {
         ctx.closePath();
         ctx.restore();
         ctx.fill();
-    }
+    };
     // create a new line object
     var line=new Line(fromX,fromY,toX,toY);
     // draw the line
     line.drawWithArrowheads(context);
 }
-function ideaUpdate(idea) {
 
-    tempIdea = findIdeaByNo(idea.no);
-    tempIdea.edge  = idea.edge;
-}
+/******************************************************************
+ * 백그라운드 설정
+ ******************************************************************/
 function client_background_change(no) {
     switch(no) {
         case 1:
@@ -358,6 +372,10 @@ function client_background_change(no) {
             $('#board_wrapper').css("background-image", "url('asserts/img/braim.png')");
     }
 }
+
+/******************************************************************
+ * 소켓 통신
+ ******************************************************************/
 $(document).ready(function () {
     /**************************************************************
      * board_wrapper의 영역에서 클릭한 곳에 다이얼로그를 열어준다.
@@ -409,7 +427,7 @@ $(document).ready(function () {
     });
 
     socket.on('card created',function(idea){
-        // 이미 만들어진 카드는 만들지 않기 위해 isMaxNo를 이용 이곳에서 실질적으로 데이터를 가져와 만들기도 하고, 새로운 값이 DB에 들어가면 화면상에 표시하기 위해 사용
+
         if(isMaxNo(idea.no)) {
             create_card(idea);
         }
