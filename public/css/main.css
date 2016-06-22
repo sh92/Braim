@@ -7,9 +7,11 @@ body {
 nav {
     width: 1300px;
     height: 80px;
-    background: #242424;
+    background: url("../img/header.png");
+    background-size: 1300px 80px;
     color: white;
     font-family: sans-serif;
     font-size: 18px;
     text-align: center;
+    
 }

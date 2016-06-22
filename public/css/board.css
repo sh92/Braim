@@ -182,9 +182,10 @@ body{
     width: 285px;
     height: 1000px;
     position: relative;
-    border-right: 1px solid black;
+    background-color: rgba(255, 218, 180, 0.18);
+    border-left: 1px dashed black;
     float: left;
-    left: 15px;
+    padding-left: 5px;
 }
 
 #chat_list{
@@ -302,6 +303,9 @@ body{
 #side_menu ul{
     padding-left: 10px;
     margin:0px;
+}
+#userList {
+    text-align: left;
 }
 #userList li{
     list-style: none;
