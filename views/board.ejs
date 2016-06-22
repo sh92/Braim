@@ -135,7 +135,9 @@
                     return false;
                 });
 		        socket.on('chat message', function(msg){
-                    $('#chat_list').append($('<li>').text(msg));
+                    var usr_id = "<%=User.username%>"+" : ";
+                    var txt = usr_id + msg;
+                    $('#chat_list').append($('<li>').text(txt));
                 });
         </script>
     </div>

@@ -201,8 +201,8 @@ body{
 
 }
 
-#chat_list ul{
-
+#chat_list li{
+    list-style: none;
 }
 
 #chat_list ul li{
@@ -216,11 +216,11 @@ body{
     word-break:break-all;
 }
 
-#chat_intput input#chat_msg{
-    width:340px;
+#chatting input#m{
+    width:210px;
 }
 
-#chat_input button#send_msg{
+#chatting button#send_msg{
     width:60px;
     background:#2a6496;
     color:white;
