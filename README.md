@@ -35,3 +35,8 @@ BRAIn storMing tool
 5. 아이디어 카드 댓글 달고 5점 만점 평가 기능
 6. 테마 변경 기능으로 브레인 스토밍 
 7. 채팅 기능
+
+## 화면
+
+![note](./img/note.png)  
+![todo](./img/todo.png)
